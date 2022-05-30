@@ -1,0 +1,136 @@
+/* Layout */
+:root {
+    --primary: rgba(5, 8, 184, 0.1);
+    --secondary: white;
+    --highlights: #eda109;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    color: #F5F3F5;
+    background-color: var(--primary);
+    font-family: Arial, sans-serif;
+  }
+  
+  a {
+    color: var(--secondary);
+    text-decoration: none;
+  }
+  
+  .app-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* Banner */
+  
+  .banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    height: 5vh;
+    background-color: rgba(60, 25, 240, 0.8);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Navbar */
+  
+  .navbar {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Brain logo */
+  
+  .logo-banner {
+    display: inline-block;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .logo-banner h3 {
+    font-size: 1.3rem;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-left: 1rem;
+  }
+  
+  .logo-banner img {
+    display: inline;
+    width: 5rem;
+    margin-left: 0;
+  }
+  
+  /* Title */
+  
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+    padding: 30px;
+  }
+  
+  /* Link to documentation */
+  
+  .doc-link {
+    border: 1px solid var(--secondary);
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 0 10px;
+    width: 100px;
+    text-align: center;
+  }
+  
+  .doc-link:hover {
+    border: 1px solid #13070C;
+    background-color: white;
+    color: #13070C;
+  }
+  
+  /* Main body */
+  
+  .main-body {
+    margin-bottom: 7vh;
+  }
+  
+  /* Footer */
+  
+  footer {
+    display: flex;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(60, 25, 240, 0.8);
+    color: white;
+    font-size: 1rem;
+  }
+  
+  footer p {
+    padding: 10px;
+    margin: 5px 0px;
+  }
+  
+  footer p:first-child {
+    border-right: 2px solid white;
+  }
+  
+  footer a {
+    text-decoration: underline;
+    color: white;
+  }
+  
+  /* Default welcome section */
+  
+  /* h2 {
+    font-size: 2rem;
+  } */
