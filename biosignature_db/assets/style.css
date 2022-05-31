@@ -64,7 +64,7 @@
   
   .logo-banner img {
     display: inline;
-    width: 5rem;
+    width: 4rem;
     margin-left: 0;
   }
   
@@ -96,7 +96,27 @@
   /* Main body */
   
   .main-body {
-    margin-bottom: 7vh;
+    width: 100vw;
+    height: 92vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    background-color: white;
+  }
+
+  .map-style {
+    order: 1;
+    margin-bottom: 5vh;
+  }
+
+  .projection-selector {
+    order: 1;
+  }
+
+  .interactive-map {
+    order: 2;
   }
   
   /* Footer */

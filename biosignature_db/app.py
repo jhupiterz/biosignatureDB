@@ -1,7 +1,12 @@
+import pandas as pd
+
 import dash
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
+
+from biosignature_db import plots
+from biosignature_db import data
 
 app = dash.Dash(
     __name__, suppress_callback_exceptions = True,
@@ -49,8 +54,21 @@ app.layout = html.Div(
             className="banner",
         ),
         
+        dcc.Store(id='store-research', data = data.read_all_json_files()[0], storage_type='memory'),
+        dcc.Store(id='store-researcher', data = data.read_all_json_files()[1], storage_type='memory'),
+        dcc.Store(id='store-biosignature', data = data.read_all_json_files()[2], storage_type='memory'),
+        dcc.Store(id='store-environment', data = data.read_all_json_files()[3], storage_type='memory'),
+
         # Main content ----------------------------------------------------------
-        html.Div(id='start-page', children=[], className = 'main-body'),
+        html.Div(id='start-page', children=[
+            html.Div(children = [
+                dcc.RadioItems(id = 'projection-selector',
+                               options = ['mercator', 'orthographic', 'natural earth'],
+                               value = 'natural earth', inline= False, style = {'color': 'black'})
+                ], className = 'projection-selector'),
+            html.Div(id = 'interactive-map', children = [], className = 'interactive-map')
+
+        ], className = 'main-body'),
         
         # Footer ----------------------------------------------------------------
         html.Footer(
@@ -73,6 +91,14 @@ app.layout = html.Div(
     className="app-layout",
 )
 
+@app.callback(
+    Output('interactive-map', 'children'),
+    Input('store-environment', 'data'),
+    Input('projection-selector', 'value'))
+def create_interactive_map(data, projection):
+    df = pd.DataFrame(data)
+    return dcc.Graph(figure=plots.plot_interactive_map(df, projection), className = 'map-style')
+
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=False)
+    app.run_server(debug=True, use_reloader=True)
