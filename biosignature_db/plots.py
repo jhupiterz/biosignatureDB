@@ -4,9 +4,9 @@ import plotly.express as px
 
 def plot_interactive_map(df, projection):
     fig = px.scatter_geo(df, lat='latitude', lon='longitude',
-                        color = df['extreme_conditions'],
-                        size = [1,1],
-                        hover_name="location_name",
+                        color = 'env_conditions',
+                        size = 'number of samples',
+                        hover_name='location_name',
                         width= 800,
                         height= 800,
                         projection=projection)

@@ -54,10 +54,7 @@ app.layout = html.Div(
             className="banner",
         ),
         
-        dcc.Store(id='store-research', data = data.read_all_json_files()[0], storage_type='memory'),
-        dcc.Store(id='store-researcher', data = data.read_all_json_files()[1], storage_type='memory'),
-        dcc.Store(id='store-biosignature', data = data.read_all_json_files()[2], storage_type='memory'),
-        dcc.Store(id='store-environment', data = data.read_all_json_files()[3], storage_type='memory'),
+        dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type='memory'),
 
         # Main content ----------------------------------------------------------
         html.Div(id='start-page', children=[
@@ -93,7 +90,7 @@ app.layout = html.Div(
 
 @app.callback(
     Output('interactive-map', 'children'),
-    Input('store-environment', 'data'),
+    Input('store-biosignature', 'data'),
     Input('projection-selector', 'value'))
 def create_interactive_map(data, projection):
     df = pd.DataFrame(data)
