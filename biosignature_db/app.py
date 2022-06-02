@@ -94,6 +94,7 @@ app.layout = html.Div(
     Input('projection-selector', 'value'))
 def create_interactive_map(data, projection):
     df = pd.DataFrame(data)
+    df = df.groupby(['latitude', 'longitude', 'location_name'], as_index=False).count()[['latitude', 'longitude', 'location_name', 'biosignature_id']]
     return dcc.Graph(figure=plots.plot_interactive_map(df, projection), className = 'map-style')
 
 # Runs the app ------------------------------------------------------------
