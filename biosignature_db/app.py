@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 import dash
 from dash import dcc
@@ -57,15 +58,26 @@ app.layout = html.Div(
         dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type='memory'),
 
         # Main content ----------------------------------------------------------
-        html.Div(id='start-page', children=[
-            html.Div(children = [
-                dcc.RadioItems(id = 'projection-selector',
-                               options = ['mercator', 'orthographic', 'natural earth'],
-                               value = 'natural earth', inline= False, style = {'color': 'black'})
-                ], className = 'projection-selector'),
-            html.Div(id = 'interactive-map', children = [], className = 'interactive-map')
+        html.Div([
+            html.Div(id='start-page', children=[
+                html.Div([
+                    html.Div(children = [
+                        html.Div([
+                            html.H3('Projection', style = {'order':'1', 'text-align': 'center', 'color': 'black', 'margin-bottom': '0px'}),
+                            dcc.RadioItems(id = 'projection-selector',
+                                        options = ['mercator', 'orthographic', 'natural earth'],
+                                        value = 'mercator', inline= False, style = {'order': '2', 'color': 'black'})
+                            ], className = 'projection-selector')], className= 'div-projection'),
+                    html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
+                    style = {'order': '1'}),
+                
+                html.Div([
+                    html.Div(id = 'hover-bar-chart', children = [], style = {'order': '1'}),
+                    html.Div(id = 'hover-pie-chart', children = [], style = {'order': '2'})],
+                    className= 'hover-charts')
 
-        ], className = 'main-body'),
+            ], className = 'main-panel')],
+        className = 'main-body'),
         
         # Footer ----------------------------------------------------------------
         html.Footer(
@@ -94,8 +106,42 @@ app.layout = html.Div(
     Input('projection-selector', 'value'))
 def create_interactive_map(data, projection):
     df = pd.DataFrame(data)
-    df = df.groupby(['latitude', 'longitude', 'location_name'], as_index=False).count()[['latitude', 'longitude', 'location_name', 'biosignature_id']]
-    return dcc.Graph(figure=plots.plot_interactive_map(df, projection), className = 'map-style')
+    df = df.groupby(['latitude', 'longitude', 'location_name'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples']]
+    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df, projection), className = 'map-style')
+
+@app.callback(
+    Output('hover-bar-chart', 'children'),
+    Input('map', 'hoverData'),
+    Input('store-biosignature', 'data')
+)
+def create_bar_chart(hoverData, data):
+    df = pd.DataFrame(data)
+    grouped_df = df.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat']).sum()[['number of samples' ]]
+    grouped_df.reset_index(level=['biosignature_cat'], inplace=True)
+    if hoverData:
+        loc = hoverData['points'][0]['hovertext']
+        lat = hoverData['points'][0]['lat']
+        lon = hoverData['points'][0]['lon']
+        fig = plots.plot_bar_chart(grouped_df, lat, lon, loc)
+        return dcc.Graph(figure=fig)
+    else:
+        return html.P('Hover on a location on the map to display more data', className = 'hover-default-text')
+
+@app.callback(
+    Output('hover-pie-chart', 'children'),
+    Input('map', 'hoverData'),
+    Input('store-biosignature', 'data')
+)
+def create_pie_chart(hoverData, data):
+    df = pd.DataFrame(data)
+    grouped_df = df.groupby(['latitude', 'longitude', 'location_name', 'detection_methods']).sum()[['number of samples' ]]
+    grouped_df.reset_index(level=['detection_methods'], inplace=True)
+    if hoverData:
+        loc = hoverData['points'][0]['hovertext']
+        lat = hoverData['points'][0]['lat']
+        lon = hoverData['points'][0]['lon']
+        fig = plots.plot_pie_chart(grouped_df, lat, lon, loc)
+        return dcc.Graph(figure=fig)
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':

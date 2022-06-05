@@ -19,7 +19,6 @@
   }
   
   .app-layout {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -95,15 +94,36 @@
   
   /* Main body */
   
-  .main-body {
-    width: 100vw;
-    height: 92vh;
+ .main-body {
+   height: 80vh;
+   width: 95vw;
+   margin: auto;
+   margin-top: 4vh;
+   border-radius: 10px;
+   background-color: white;
+ }
+  
+  .hover-default-text {
+    color: grey;
+    text-align: center;
+    margin-top: 18vh;
+  }
+
+  .main-panel {
+    height: 80vh;
+    width: 60vw;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    margin: auto;
     background-color: white;
+    margin: auto;
+  }
+
+  .div-projection {
+    order: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .map-style {
@@ -113,10 +133,27 @@
 
   .projection-selector {
     order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2vh;
   }
 
   .interactive-map {
     order: 2;
+  }
+
+  .hover-charts {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    background-color: white;
+    margin-top: 5vh;
+    width: 18vw;
+    height: 600px;
   }
   
   /* Footer */
