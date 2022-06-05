@@ -1,3 +1,4 @@
+from turtle import color
 import pandas as pd
 import plotly.express as px
 
@@ -23,7 +24,7 @@ app.layout = html.Div(
                 html.A(
                     [
                         html.Img(
-                            src="/assets/dna.png",
+                            src="/assets/logo.png",
                             alt="biosignature database"
                         ),
                         html.H3("Biosignature Database")
@@ -68,8 +69,12 @@ app.layout = html.Div(
                                         options = ['mercator', 'orthographic', 'natural earth'],
                                         value = 'mercator', inline= False, style = {'order': '2', 'color': 'black'})
                             ], className = 'projection-selector')], className= 'div-projection'),
-                    html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
-                    style = {'order': '1'}),
+                        html.Div([
+                            html.H3('Paleo-environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '0px'}),
+                            html.Div(id = 'paleoenv-filter', children = [], style = {'order': '2'})
+                        ]),
+                        html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
+                        style = {'order': '1'}),
                 
                 html.Div([
                     html.Div(id = 'hover-bar-chart', children = [], style = {'order': '1'}),
@@ -103,10 +108,15 @@ app.layout = html.Div(
 @app.callback(
     Output('interactive-map', 'children'),
     Input('store-biosignature', 'data'),
-    Input('projection-selector', 'value'))
-def create_interactive_map(data, projection):
+    Input('projection-selector', 'value'),
+    Input('paleoenv-value', 'value'))
+def create_interactive_map(data, projection, value_paleo):
     df = pd.DataFrame(data)
-    df = df.groupby(['latitude', 'longitude', 'location_name'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples']]
+    if value_paleo == 'All':
+        df = df.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
+    elif value_paleo != 'All':
+        df = df[df['paleoenvironment'] == value_paleo]
+        df = df.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
     return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df, projection), className = 'map-style')
 
 @app.callback(
@@ -116,8 +126,8 @@ def create_interactive_map(data, projection):
 )
 def create_bar_chart(hoverData, data):
     df = pd.DataFrame(data)
-    grouped_df = df.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat']).sum()[['number of samples' ]]
-    grouped_df.reset_index(level=['biosignature_cat'], inplace=True)
+    grouped_df = grouped_df = df.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat', 'biosignature_subcat']).sum()[['number of samples' ]]
+    grouped_df.reset_index(level=['biosignature_cat', 'biosignature_subcat'], inplace=True)
     if hoverData:
         loc = hoverData['points'][0]['hovertext']
         lat = hoverData['points'][0]['lat']
@@ -143,6 +153,16 @@ def create_pie_chart(hoverData, data):
         fig = plots.plot_pie_chart(grouped_df, lat, lon, loc)
         return dcc.Graph(figure=fig)
 
+@app.callback(
+    Output('paleoenv-filter', 'children'),
+    Input('store-biosignature', 'data'))
+def create_dropdown(data):
+    df = pd.DataFrame(data)
+    options = df['paleoenvironment'].unique().tolist()
+    options = ['All'] + options
+    return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All',
+                        placeholder = 'Paleoenvironment', style = {'color': 'black'})
+
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=True)
+    app.run_server(debug=False, use_reloader=True)

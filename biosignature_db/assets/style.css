@@ -32,7 +32,7 @@
     align-items: center;
     padding: 15px 30px;
     height: 5vh;
-    background-color: rgba(60, 25, 240, 0.8);
+    background-color: rgba(72, 40, 120, 0.8);
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
   }
   
@@ -58,12 +58,12 @@
     font-size: 1.3rem;
     font-weight: 400;
     white-space: nowrap;
-    margin-left: 1rem;
+    margin-left: -1rem;
   }
   
   .logo-banner img {
     display: inline;
-    width: 4rem;
+    width: 9rem;
     margin-left: 0;
   }
   
@@ -118,12 +118,14 @@
     align-items: center;
     background-color: white;
     margin: auto;
+    margin-right: 5vw;
   }
 
   .div-projection {
     order: 1;
     display: flex;
     flex-direction: column;
+    margin-left: 0px;
   }
 
   .map-style {
@@ -135,7 +137,7 @@
     order: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     margin-bottom: 2vh;
   }
@@ -167,7 +169,7 @@
     /* flex-direction: column; */
     align-items: center;
     justify-content: center;
-    background-color: rgba(60, 25, 240, 0.8);
+    background-color: rgba(72, 40, 120, 0.8);
     color: white;
     font-size: 1rem;
   }
