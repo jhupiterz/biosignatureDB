@@ -99,7 +99,15 @@ app.layout = html.Div(
             html.Div([
                 html.H3('Data preview', style = {'color': 'black', 'text-align': 'center', 'order':'1'}),
                 html.Div([
-                    dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black'}, style_header= {'color': 'black', 'font-weight': 'bold'})],
+                    dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black'},
+                                         style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left'},
+                                         style_cell = {'textAlign': 'left'},
+                                         style_data_conditional=[
+                                                                    {
+                                                                        'if': {'row_index': 'odd'},
+                                                                        'backgroundColor': 'rgba(5, 8, 184, 0.1)',
+                                                                    }
+                                                                ])],
                     style = {'order':'2','overflow': 'auto', 'width':'30vw', 'height':'35.5vh'})],
             style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center',
                      'width':'30vw', 'height':'35.5vh', 'margin-top': '8vh', 'margin-left': '2vw'})],
@@ -228,4 +236,4 @@ def generate_datatable(data):
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=True)
+    app.run_server(debug=False, use_reloader=True)

@@ -23,6 +23,10 @@
     flex-direction: column;
     justify-content: space-between;
   }
+
+  div.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .column-header-name {
+    margin-left: unset;
+}
   
   /* Banner */
   
@@ -88,7 +92,7 @@
 
   .doc-link:hover {
     border: 1px solid #13070C;
-    background-color: #fde725;
+    background-color: #e3d1ff;
     color: #13070C;
   }
 
@@ -107,7 +111,7 @@
 
   .doc-link-download:hover {
     border: 1px solid #13070C;
-    background-color: #fde725;
+    background-color: #e3d1ff;
     color: #13070C;
   }
   
