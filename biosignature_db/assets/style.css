@@ -58,13 +58,13 @@
     font-size: 1.3rem;
     font-weight: 400;
     white-space: nowrap;
-    margin-left: -1rem;
+    margin-left: -1.3rem;
   }
   
   .logo-banner img {
     display: inline;
     width: 9rem;
-    margin-left: 0;
+    margin-left: -1.5vw;
   }
   
   /* Title */
@@ -85,10 +85,25 @@
     width: 100px;
     text-align: center;
   }
-  
+
   .doc-link:hover {
     border: 1px solid #13070C;
-    background-color: white;
+    background-color: #fde725;
+    color: #13070C;
+  }
+
+  .doc-link-download {
+    border: 1px solid var(--secondary);
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 0 10px;
+    width: 130px;
+    text-align: center;
+  }
+
+  .doc-link-download:hover {
+    border: 1px solid #13070C;
+    background-color: #fde725;
     color: #13070C;
   }
   
@@ -98,7 +113,11 @@
    height: 80vh;
    width: 95vw;
    margin: auto;
-   margin-top: 4vh;
+   margin-top: 3.5vh;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
    border-radius: 10px;
    background-color: white;
  }
@@ -106,7 +125,7 @@
   .hover-default-text {
     color: grey;
     text-align: center;
-    margin-top: 18vh;
+    margin-top: 23vh;
   }
 
   .main-panel {
@@ -116,9 +135,19 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    background-color: white;
     margin: auto;
+    order: 2;
+    margin-top: 1vh;
     margin-right: 5vw;
+  }
+
+  .left-panel {
+    height: 80vh;
+    width: 35vw;
+    margin-top: 6vh;
+    margin-right: -2vw;
+    display: flex;
+    flex-direction: column;
   }
 
   .div-projection {
@@ -126,6 +155,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 0px;
+    margin-top: 4vh;
   }
 
   .map-style {
@@ -143,6 +173,7 @@
   }
 
   .interactive-map {
+    margin-top: 2vh;
     order: 2;
   }
 
