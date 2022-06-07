@@ -1,4 +1,5 @@
 from folium import Marker
+from matplotlib import projections
 from matplotlib.pyplot import margins, title
 import plotly.graph_objects as go
 import plotly.express as px
@@ -59,3 +60,17 @@ def plot_pie_chart(df, lat, lon, loc):
                     x=1
                 ))
     return fig
+
+# def generate_mars_map(lat,lon):
+#     fig = plt.figure(figsize=(12, 12))
+#     img_extent = (-180, 180, -90, 90)
+
+#     img = plt.imread('assets/mars.png')
+
+#     ax = plt.axes(projection=ccrs.Mercator())
+#     ax.imshow(img, origin='upper', extent=img_extent)
+#     ax.set_xmargin(0.05)
+#     ax.set_ymargin(0.10)
+#     ax.gridlines()
+#     plt.scatter(lat,lon, s= 30, c='black', marker= '')
+#     plt.imsave(projections = ccrs.Mercator(), fname= 'assets/mars_loc.png', arr = img)

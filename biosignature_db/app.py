@@ -1,6 +1,5 @@
 from turtle import color
 import pandas as pd
-import plotly.express as px
 
 import dash
 from dash import dcc
@@ -37,17 +36,23 @@ app.layout = html.Div(
                 html.Div(
                     [
                         html.A(
-                            "Contribute", 
+                            "Documentation", 
                             href="https://github.com/jhupiterz/biosignature_db",
                             target='_blank', 
                             className="doc-link"
                         ),
                         html.A(
-                            "Documentation", 
+                            "Contribute", 
                             href="https://github.com/jhupiterz/research-analytics/blob/main/README.md",
                             target='_blank', 
                             className="doc-link"
                         ),
+                        html.A(
+                            "Download data", 
+                            href="https://github.com/jhupiterz/research-analytics/blob/main/README.md",
+                            target='_blank', 
+                            className="doc-link-download"
+                        )
                     
                     ],
                     className="navbar"
@@ -71,17 +76,30 @@ app.layout = html.Div(
                             ], className = 'projection-selector')], className= 'div-projection'),
                         html.Div([
                             html.H3('Paleo-environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '0px'}),
-                            html.Div(id = 'paleoenv-filter', children = [], style = {'order': '2'})
-                        ]),
+                            html.Div(id = 'paleoenv-filter', children = [], style = {'order': '2', 'z-index': '10', 'position': 'absolute'})
+                        ], style = {'margin-top': '-20px'}),
                         html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
-                        style = {'order': '1'}),
+                        style = {'order': '1', 'margin-right': '40px'}),
                 
                 html.Div([
                     html.Div(id = 'hover-bar-chart', children = [], style = {'order': '1'}),
                     html.Div(id = 'hover-pie-chart', children = [], style = {'order': '2'})],
                     className= 'hover-charts')
 
-            ], className = 'main-panel')],
+            ], className = 'main-panel'),
+        
+        html.Div([
+            html.Div([
+                html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-20px', 'order': '1'}),
+                html.Div(id = 'mars-map', children = [],
+                        style = {'width': '40vw', 'height': '30vh', 'order': '2', 'margin-top': '-15vh', 'margin-left': '-35px'})],
+            style = {'order':'1','display':'flex', 'flex-direction': 'column', 'align-items': 'center','margin-top': '2vh', 'height': '25vh'}),
+            html.Div([
+                html.H3('Supporting literature', style = {'color': 'black', 'text-align': 'center', 'order': '1'}),
+                html.P('', style = {'order': '2'})],
+            style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center', 'margin-top': '5vh'})],
+            className = 'left-panel')],
+        
         className = 'main-body'),
         
         # Footer ----------------------------------------------------------------
@@ -117,7 +135,7 @@ def create_interactive_map(data, projection, value_paleo):
     elif value_paleo != 'All':
         df = df[df['paleoenvironment'] == value_paleo]
         df = df.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
-    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df, projection), className = 'map-style')
+    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df, projection), className = 'map-style', config= {'displayModeBar': False})
 
 @app.callback(
     Output('hover-bar-chart', 'children'),
@@ -161,8 +179,25 @@ def create_dropdown(data):
     options = df['paleoenvironment'].unique().tolist()
     options = ['All'] + options
     return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All',
-                        placeholder = 'Paleoenvironment', style = {'color': 'black'})
+                        placeholder = 'Paleoenvironment', style = {'color': 'black', 'width': '26vw'})
+
+@app.callback(
+    Output('mars-map', 'children'),
+    Input('map', 'hoverData'),
+    Input('store-biosignature', 'data'))
+def generate_mars_map(hoverData, data):
+    df = pd.DataFrame(data)
+    if hoverData:
+        location = hoverData['points'][0]['hovertext']
+        mars_location = df[df['location_name'] == location]['mars_counterpart_1'][0]
+        if mars_location == 'Columbia Hills, Mars':
+            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '700px', 'height': '600px'})
+        elif mars_location == 'Eberswalde delta, Mars':
+            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '700px', 'height': '600px'})
+        elif mars_location == 'Meridiani Planum, Mars':
+            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '700px', 'height': '600px'})
+    return html.Img(src='/assets/mars_map.png', style = {'width': '700px', 'height': '600px'})
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=False, use_reloader=True)
+    app.run_server(debug=True, use_reloader=True)
