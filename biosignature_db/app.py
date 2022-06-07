@@ -2,6 +2,7 @@ from turtle import color
 import pandas as pd
 
 import dash
+from dash import dash_table
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
@@ -42,17 +43,18 @@ app.layout = html.Div(
                             className="doc-link"
                         ),
                         html.A(
-                            "Contribute", 
-                            href="https://github.com/jhupiterz/research-analytics/blob/main/README.md",
-                            target='_blank', 
+                            "Contribute",
+                            href="https://github.com/jhupiterz/biosignatureDB",
+                            target='_blank',
                             className="doc-link"
                         ),
-                        html.A(
-                            "Download data", 
-                            href="https://github.com/jhupiterz/research-analytics/blob/main/README.md",
-                            target='_blank', 
-                            className="doc-link-download"
-                        )
+                        html.Button(
+                            "Download data",
+                            className="doc-link-download",
+                            id = "btn-download-data",
+                            n_clicks= 0
+                        ),
+                        dcc.Download(id="download-csv")
                     
                     ],
                     className="navbar"
@@ -75,7 +77,7 @@ app.layout = html.Div(
                                         value = 'mercator', inline= False, style = {'order': '2', 'color': 'black'})
                             ], className = 'projection-selector')], className= 'div-projection'),
                         html.Div([
-                            html.H3('Paleo-environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '0px'}),
+                            html.H3('(Paleo)environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '8px'}),
                             html.Div(id = 'paleoenv-filter', children = [], style = {'order': '2', 'z-index': '10', 'position': 'absolute'})
                         ], style = {'margin-top': '-20px'}),
                         html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
@@ -93,11 +95,14 @@ app.layout = html.Div(
                 html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-20px', 'order': '1'}),
                 html.Div(id = 'mars-map', children = [],
                         style = {'width': '40vw', 'height': '30vh', 'order': '2', 'margin-top': '-15vh', 'margin-left': '-35px'})],
-            style = {'order':'1','display':'flex', 'flex-direction': 'column', 'align-items': 'center','margin-top': '2vh', 'height': '25vh'}),
+            style = {'order':'1','display':'flex', 'flex-direction': 'column', 'align-items': 'center','margin-top': '0vh', 'height': '25vh'}),
             html.Div([
-                html.H3('Supporting literature', style = {'color': 'black', 'text-align': 'center', 'order': '1'}),
-                html.P('', style = {'order': '2'})],
-            style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center', 'margin-top': '5vh'})],
+                html.H3('Data preview', style = {'color': 'black', 'text-align': 'center', 'order':'1'}),
+                html.Div([
+                    dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black'}, style_header= {'color': 'black', 'font-weight': 'bold'})],
+                    style = {'order':'2','overflow': 'auto', 'width':'30vw', 'height':'35.5vh'})],
+            style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center',
+                     'width':'30vw', 'height':'35.5vh', 'margin-top': '8vh', 'margin-left': '2vw'})],
             className = 'left-panel')],
         
         className = 'main-body'),
@@ -122,6 +127,9 @@ app.layout = html.Div(
     ],
     className="app-layout",
 )
+
+biosignature_json = data.read_json_data('data/biosignature.json')
+bio_df = pd.DataFrame(biosignature_json)
 
 @app.callback(
     Output('interactive-map', 'children'),
@@ -178,7 +186,7 @@ def create_dropdown(data):
     df = pd.DataFrame(data)
     options = df['paleoenvironment'].unique().tolist()
     options = ['All'] + options
-    return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All',
+    return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All', clearable= False,
                         placeholder = 'Paleoenvironment', style = {'color': 'black', 'width': '26vw'})
 
 @app.callback(
@@ -198,6 +206,26 @@ def generate_mars_map(hoverData, data):
             return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '700px', 'height': '600px'})
     return html.Img(src='/assets/mars_map.png', style = {'width': '700px', 'height': '600px'})
 
+@app.callback(
+    Output("download-csv", "data"),
+    Input("btn-download-data", "n_clicks"),
+    prevent_initial_call=True,
+)
+def func(n_clicks):
+    if n_clicks > 0:
+        return dcc.send_data_frame(bio_df.to_csv, "biosignature_data.csv")
+
+@app.callback(
+    Output("data-preview", "data"),
+    Output("data-preview", "columns"),
+    Input("store-biosignature", "data")
+)
+def generate_datatable(data):
+    df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
+                             'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
+                             'min_age', 'max_age', 'paleoenvironment']]
+    return df.to_dict('records'),[{"name": i, "id": i} for i in df.columns]
+
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(debug=False, use_reloader=True)
+    app.run_server(debug=True, use_reloader=True)
