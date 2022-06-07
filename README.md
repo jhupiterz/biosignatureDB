@@ -1,8 +1,9 @@
 # Biosignature Database
 
 
-- Description: Project Description
-- Data Source: manual entries from research papers
+The Biosignature Database is an initiative to build a standardized, accessible, and consistent database among the astrobiology community.
+
+Data Source: manual entries from research papers
 
 ![App preview](biosignatureDB.gif)
 
