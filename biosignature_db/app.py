@@ -37,7 +37,7 @@ app.layout = html.Div(
                     [
                         html.A(
                             "Documentation", 
-                            href="https://github.com/jhupiterz/biosignature_db",
+                            href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436",
                             target='_blank', 
                             className="doc-link"
                         ),
