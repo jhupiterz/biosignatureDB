@@ -1,7 +1,7 @@
-# Data analysis
+# Biosignature Database
 - Document here the project: biosignature_db
 - Description: Project Description
-- Data Source:
+- Data Source: manual entries from research papers
 - Type of analysis:
 
 Please document the project the better you can.
