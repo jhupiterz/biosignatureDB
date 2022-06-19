@@ -62,7 +62,7 @@ app.layout = html.Div(
             className="banner",
         ),
         
-        dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type='memory'),
+        dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type = 'memory'),
 
         # Main content ----------------------------------------------------------
         html.Div([
