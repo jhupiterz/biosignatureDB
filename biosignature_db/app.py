@@ -1,4 +1,3 @@
-from turtle import color
 import pandas as pd
 
 import dash
