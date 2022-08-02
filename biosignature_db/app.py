@@ -107,7 +107,7 @@ app.layout = html.Div(
                                                                         'backgroundColor': 'rgba(5, 8, 184, 0.1)',
                                                                     }
                                                                 ])],
-                    style = {'order':'2','overflow': 'auto', 'width':'30vw', 'height':'35.5vh'})],
+                    style = {'order':'2','overflow': 'auto', 'width':'30vw', 'height':'35.5vh', 'borderRadius':'15px'})],
             style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center',
                      'width':'30vw', 'height':'35.5vh', 'margin-top': '8vh', 'margin-left': '2vw'})],
             className = 'left-panel')],
