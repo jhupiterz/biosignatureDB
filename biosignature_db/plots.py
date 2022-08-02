@@ -31,14 +31,14 @@ def plot_bar_chart(df, lat, lon, loc):
                     '#35b779','#26828e','#3e4989']
     fig = px.bar(df.loc[lat, lon, loc].reset_index(), x='biosignature_cat',
                  y='number of samples', color='biosignature_subcat', color_discrete_sequence= colorscheme,
-                 width=400, height=250)
+                 width=320, height=250)
     fig.update_yaxes(visible=False)
     fig.update_xaxes(title='')
     fig.update_layout(
         margin=dict(l=1, r=1, t=30, b=0),
-        paper_bgcolor='white',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
         legend={'title_text':''},
-        plot_bgcolor='white',
+        plot_bgcolor='rgba(0, 0, 0, 0)',
         title_text= 'Types of biosignatures',
         title_x = 0.5)
     return fig
@@ -48,11 +48,11 @@ def plot_pie_chart(df, lat, lon, loc):
                     '#35b779','#26828e','#3e4989']
     fig = px.pie(df.loc[lat, lon,loc].reset_index(drop=True), color_discrete_sequence= colorscheme,
                      values = 'number of samples', names='detection_methods',
-                     width=300, height=300)
+                     width=320, height=320)
     fig.update_layout(
         margin=dict(l=1, r=1, t=30, b=0),
-        paper_bgcolor='white',
-        plot_bgcolor='white',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        plot_bgcolor='rgba(0, 0, 0, 0)',
         title_text= 'Detection methods',
         title_x = 0.5,
         legend=dict(

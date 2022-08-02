@@ -138,21 +138,21 @@
 
   .main-panel {
     height: 80vh;
-    width: 60vw;
+    width: 62vw;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    background-color: #e3d1ff;
     margin: auto;
+    margin-right: 0px;
     order: 2;
-    margin-top: 1vh;
-    margin-right: 5vw;
   }
 
   .left-panel {
     height: 80vh;
-    width: 35vw;
-    margin-top: 6vh;
+    width: 30vw;
+    margin-top: 8vh;
     margin-right: -2vw;
     display: flex;
     flex-direction: column;
@@ -168,7 +168,6 @@
 
   .map-style {
     order: 1;
-    margin-bottom: 5vh;
   }
 
   .projection-selector {
@@ -181,8 +180,9 @@
   }
 
   .interactive-map {
-    margin-top: 2vh;
     order: 2;
+    height: 60vh;
+    margin-bottom: 7vh;
   }
 
   .hover-charts {
@@ -191,10 +191,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    background-color: white;
     margin-top: 5vh;
-    width: 18vw;
-    height: 600px;
+    width: 20vw;
+    height: 67vh;
   }
   
   /* Footer */
