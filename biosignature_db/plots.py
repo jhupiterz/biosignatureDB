@@ -23,7 +23,7 @@ def plot_interactive_map(df, projection):
                             ),
                         margin=dict(l=0, r=0, t=0, b=0),
                         paper_bgcolor = "rgba(0, 0, 0, 0)",
-                        plot_bgcolor = "rgba(60, 25, 240, 0.1)")
+                        plot_bgcolor = "rgba(0, 0, 0, 0)")
     return fig
 
 def plot_bar_chart(df, lat, lon, loc):

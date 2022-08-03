@@ -98,16 +98,25 @@ app.layout = html.Div(
             html.Div([
                 html.H3('Data preview', style = {'color': 'black', 'text-align': 'center', 'order':'1'}),
                 html.Div([
-                    dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black'},
-                                         style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left'},
-                                         style_cell = {'textAlign': 'left'},
+                    dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                                         style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
+                                         style_cell = {'textAlign': 'left', 'padding': '0px'},
+                                         style_table = {'height':'500px', 'width':'30vw', 'height':'275px', 'overflow': 'auto', 'borderRadius':'10px'},
                                          style_data_conditional=[
                                                                     {
-                                                                        'if': {'row_index': 'odd'},
+                                                                        'if': {'row_index': 'even'},
                                                                         'backgroundColor': 'rgba(5, 8, 184, 0.1)',
+                                                                    },
+                                                                    {
+                                                                        'if': {'row_index': 'odd'},
+                                                                        'backgroundColor': 'rgba(5, 8, 184, 0.4)',
+                                                                    },
+                                                                    {
+                                                                        'if': {'column_id': 'pub_url'},
+                                                                        'color': 'black'
                                                                     }
                                                                 ])],
-                    style = {'order':'2','overflow': 'auto', 'width':'30vw', 'height':'37vh', 'borderRadius':'10px'})],
+                    style = {'order':'2'})],
             style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center',
                      'width':'30vw', 'height':'37vh', 'margin-top': '10vh', 'margin-left': '2vw'})],
             className = 'left-panel')],
@@ -122,13 +131,7 @@ app.layout = html.Div(
                         "Built with ", 
                         html.A("Plotly Dash", href="https://plotly.com/dash/", target="_blank")
                     ],
-                ),
-                html.P(
-                    [
-                        "Powered by ", 
-                        html.A("Semantic Scholar", href="https://www.semanticscholar.org/", target="_blank")
-                    ],
-                ),
+                )
             ]
         ),
     ],
@@ -225,13 +228,14 @@ def func(n_clicks):
 @app.callback(
     Output("data-preview", "data"),
     Output("data-preview", "columns"),
+    Output("data-preview", "css"),
     Input("store-biosignature", "data")
 )
 def generate_datatable(data):
     df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
                              'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
-                             'min_age', 'max_age', 'paleoenvironment']]
-    return df.to_dict('records'),[{"name": i, "id": i} for i in df.columns]
+                             'min_age', 'max_age', 'pub_url', 'paleoenvironment']]
+    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':

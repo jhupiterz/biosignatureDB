@@ -144,6 +144,8 @@
     justify-content: space-around;
     align-items: center;
     background-color: #e3d1ff;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     margin: auto;
     margin-right: 0px;
     order: 2;
@@ -215,10 +217,6 @@
   footer p {
     padding: 10px;
     margin: 5px 0px;
-  }
-  
-  footer p:first-child {
-    border-right: 2px solid white;
   }
   
   footer a {
