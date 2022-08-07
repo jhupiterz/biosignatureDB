@@ -63,13 +63,11 @@ Clone the project and install it:
 git clone git@github.com:{group}/biosignature_db.git
 cd biosignature_db
 pip install -r requirements.txt
-make clean install test                # install and test
 ```
-Functionnal test with a script:
+Run the app (locally on your machine):
 
-```bash
-cd
-mkdir tmp
-cd tmp
-biosignature_db-run
 ```
+cd biosignature_db
+python app.py
+```
+Running the python file will open a window in your default browser (or copy/paste the URL that poped up in your terminal).
