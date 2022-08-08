@@ -123,7 +123,7 @@ def render_tab_content(tab_value):
                                                                 'if': {'column_id': 'pub_url'},
                                                                 'color': 'black'
                                                             }
-                                                        ])], style = {'height': '76vh', 'display': 'flex', 'flex-direction': 'column'})
+                                                        ])], style = {'height': '79vh', 'display': 'flex', 'flex-direction': 'column'})
 
 @callback(
     Output('interactive-map', 'children'),
