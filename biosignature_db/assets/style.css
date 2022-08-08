@@ -1,6 +1,6 @@
 /* Layout */
 :root {
-    --primary: rgba(5, 8, 184, 0.1);
+    --primary: white;
     --secondary: white;
     --highlights: #eda109;
   }
@@ -35,7 +35,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px 30px;
-    height: 5vh;
+    height: 7vh;
     background-color: rgba(72, 40, 120, 0.8);
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
   }
@@ -45,6 +45,12 @@
   .navbar {
     display: flex;
     align-items: center;
+  }
+
+  .menu {
+    font-weight: bold;
+    font-size: 35px;
+    color: white;
   }
   
   /* Brain logo */
@@ -60,6 +66,7 @@
   
   .logo-banner h3 {
     font-size: 1.3rem;
+    margin-top: 0.2rem;
     font-weight: 400;
     white-space: nowrap;
     margin-left: 1.2rem;
@@ -67,8 +74,13 @@
   
   .logo-banner img {
     display: inline;
-    width: 4rem;
+    width: 3rem;
     margin-left: 1vw;
+  }
+
+  .logo-banner:hover {
+    cursor: pointer;
+    color: #e3d1ff;
   }
   
   /* Title */
@@ -83,10 +95,11 @@
   
   .doc-link {
     border: 1px solid var(--secondary);
-    padding: 10px 15px;
+    padding: 5px 15px;
     border-radius: 5px;
     margin: 0 10px;
-    width: 100px;
+    width: 140px;
+    height: 35px;
     text-align: center;
   }
 
@@ -98,12 +111,13 @@
 
   .doc-link-download {
     border: 1px solid var(--secondary);
-    padding: 10px 15px;
+    padding: 5px 15px;
     border-radius: 5px;
     margin: 0 10px;
     color: white;
     font-size: 16px;
     width: 140px;
+    height: 35px;
     background-color: rgba(0, 0, 0, 0);
     cursor: pointer;
     text-align: center;
@@ -114,12 +128,33 @@
     background-color: #e3d1ff;
     color: #13070C;
   }
+
+  .doc-link-submit {
+    order: 2;
+    border: 1px solid #13070C;
+    padding: 6px 15px;
+    border-radius: 5px;
+    color: black;
+    font-size: 16px;
+    width: 200px;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    text-align: center;
+    margin-right: 0px;
+  }
+
+  .doc-link-submit:hover {
+    border: 1px solid #13070C;
+    background-color: #e3d1ff;
+    color: #13070C;
+  }
   
   /* Main body */
   
  .main-body {
    height: 80vh;
-   width: 95vw;
+   width: 98vw;
    margin: auto;
    margin-top: 3.5vh;
    display: flex;
@@ -127,7 +162,6 @@
    align-items: center;
    justify-content: space-between;
    border-radius: 10px;
-   background-color: white;
  }
   
   .hover-default-text {
@@ -135,19 +169,19 @@
     text-align: center;
     margin-top: 23vh;
   }
-
+  
   .main-panel {
     height: 80vh;
-    width: 62vw;
+    width: 66vw;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    background-color: #e3d1ff;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     margin: auto;
     margin-right: 0px;
+    background-color: #e3d1ff;
     order: 2;
   }
 
@@ -155,7 +189,6 @@
     height: 80vh;
     width: 30vw;
     margin-top: 8vh;
-    margin-right: -2vw;
     display: flex;
     flex-direction: column;
   }
