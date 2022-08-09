@@ -1,5 +1,6 @@
 import dash
-from dash import html
+import dash_auth
+from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 
 app = dash.Dash(
@@ -7,6 +8,16 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.LITERA],
     use_pages=True,
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", 'charSet':'“UTF-8”'}])
+
+VALID_USERNAME_PASSWORD_PAIRS = {
+    'hello': 'world',
+    'admin': 'password'
+}
+
+auth = dash_auth.BasicAuth(
+    app,
+    VALID_USERNAME_PASSWORD_PAIRS
+)
 
 app.title = "Biosignature Database"
 
@@ -44,6 +55,8 @@ app.layout = html.Div(
             className="banner",
         ),
 
+        dcc.Store(id='session-username', storage_type='session'),
+
         # Main content ----------------------------------------------------------
         html.Div([]),
         dash.page_container,
@@ -62,6 +75,15 @@ app.layout = html.Div(
     ],
     className="app-layout",
     )
+
+@app.callback(
+    Output('session-username', 'data'),
+    Input('session-username', 'storage_type')
+)
+def store_session_username(session):
+    if session == 'session':
+        authenticateduser = auth._username
+        return {'username': authenticateduser}
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':

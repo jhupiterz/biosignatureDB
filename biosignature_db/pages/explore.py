@@ -101,45 +101,10 @@ def render_tab_content(tab_value):
                         html.P(['👋 Make sure to read the ',
                                 html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': 'blue', 'font-weight': 'bold'}),
                                 ' before submitting any new data'], style = {'order':'1', 'color':'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw', 'margin-top': '1vh'}),
-                        html.Button(
-                             "Download data",
-                             className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw'},
-                             id = "btn-download-data",
-                             n_clicks= 0
-                        ),
-                        html.Button(
-                             "Validate data",
-                             className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '3'},
-                             id = "btn-validate-data",
-                             n_clicks= 0
-                        ),
-                        dbc.Modal(
-                            [
-                                dbc.ModalHeader(dbc.ModalTitle("What data do you wish to validate?"), style={'margin': 'auto'}),
-                                dbc.ModalBody(children=[
-                                    dash_table.DataTable(id='data-to-validate', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
-                                                         row_selectable = True,
-                                                         selected_rows = [],
-                                                         style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
-                                                         style_cell = {'textAlign': 'left', 'padding': '0px'},
-                                                         style_table = {'order':'1', 'height':'20vh', 'width':'45vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
-                                    html.Div(id='validate-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                            ],
-                            id="validate-pop-up",
-                            size="lg",
-                            style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
-                            is_open=False,
-                        ),
-                        dcc.Download(id="download-csv"),
-                        html.A(
-                            "Submit new data", 
-                            href="/submit",
-                            className="doc-link-submit",
-                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '4'}
-                        )], style={'width': '95vw', 'margin': 'auto', 'margin-top': '1vh', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between'}),
+                            
+                        html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw'}),    
+                            
+                    ], style={'width': '95vw', 'margin': 'auto', 'margin-top': '1vh', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between'}),
                     dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                 style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                 style_cell = {'textAlign': 'left', 'padding': '0px'},
@@ -284,6 +249,67 @@ def generate_datatable(data):
     df = df[df['status'] == '🟠 pending']
     print(df.head(2))
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+
+@callback(
+    Output("data-tab-buttons", "children"),
+    Input("session-username", "data")
+)
+def generate_tab_buttons(data):
+    print(data)
+    if data['username'] == 'admin':
+        return  [html.Button(
+                             "Download data",
+                             className="doc-link-download",
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
+                             id = "btn-download-data",
+                             n_clicks= 0
+                        ),
+                        html.Button(
+                             "Validate data",
+                             className="doc-link-download",
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '2vw'},
+                             id = "btn-validate-data",
+                             n_clicks= 0
+                        ),
+                        dbc.Modal(
+                            [
+                                dbc.ModalHeader(dbc.ModalTitle("What data do you wish to validate?"), style={'margin': 'auto'}),
+                                dbc.ModalBody(children=[
+                                    dash_table.DataTable(id='data-to-validate', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                                                         row_selectable = True,
+                                                         selected_rows = [],
+                                                         style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
+                                                         style_cell = {'textAlign': 'left', 'padding': '0px'},
+                                                         style_table = {'order':'1', 'height':'20vh', 'width':'45vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
+                                    html.Div(id='validate-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                            ],
+                            id="validate-pop-up",
+                            size="lg",
+                            style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
+                            is_open=False,
+                        ),
+                        dcc.Download(id="download-csv"),
+                        html.A(
+                            "Submit new data", 
+                            href="/submit",
+                            className="doc-link-submit",
+                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '3'}
+                        )]
+    return [html.Button(
+                             "Download data",
+                             className="doc-link-download",
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1'},
+                             id = "btn-download-data",
+                             n_clicks= 0
+                        ),
+            dcc.Download(id="download-csv"),
+                        html.A(
+                            "Submit new data", 
+                            href="/submit",
+                            className="doc-link-submit",
+                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-left': '6vw'}
+                        )]
 
 @callback(
     Output('validate-data-modal-body', 'children'),
