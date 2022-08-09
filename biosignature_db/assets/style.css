@@ -110,14 +110,15 @@
   }
 
   .doc-link-download {
-    border: 1px solid var(--secondary);
+    order: 2;
+    border: 1px solid black;
     padding: 5px 15px;
     border-radius: 5px;
     margin: 0 10px;
-    color: white;
-    font-size: 16px;
-    width: 140px;
-    height: 35px;
+    color: black;
+    margin-right: -4vw;
+    width: 150px;
+    height: 40px;
     background-color: rgba(0, 0, 0, 0);
     cursor: pointer;
     text-align: center;
@@ -136,8 +137,8 @@
     border-radius: 5px;
     color: black;
     font-size: 16px;
-    width: 200px;
-    height: 45px;
+    width: 150px;
+    height: 40px;
     background-color: rgba(0, 0, 0, 0);
     cursor: pointer;
     text-align: center;

@@ -66,11 +66,3 @@ app.layout = html.Div(
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
     app.run_server(debug=False, use_reloader=True)
-
-# html.Button(
-#                             "Download data",
-#                             className="doc-link-download",
-#                             id = "btn-download-data",
-#                             n_clicks= 0
-#                         ),
-#                         dcc.Download(id="download-csv")

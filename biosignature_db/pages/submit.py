@@ -7,9 +7,6 @@ from biosignature_db import data
 
 dash.register_page(__name__)
 
-biosignature_json = data.read_json_data('data/biosignature.json')
-bio_df = pd.DataFrame(biosignature_json)
-
 bio_id_input = dbc.Row(
     [
         dbc.Label("Biosignature ID", html_for="example-email-row", width=3, color="black"),
@@ -154,6 +151,30 @@ min_age_input = dbc.Row(
                 type="number",
                 id="max-age-row",
                 placeholder="E.g. 1000",
+            ),
+            width=3,
+        )
+    ],
+    className="mb-3",
+)
+
+pub_ref_input = dbc.Row(
+    [
+        dbc.Label("Pub. reference", html_for="example-radios-row", width=3, color="black"),
+        dbc.Col(
+            dbc.Input(
+                type="text",
+                id="pub-ref-row",
+                placeholder="E.g. Teece et al. (2020)",
+            ),
+            width=3,
+        ),
+        dbc.Label("Pub. year", html_for="example-radios-row", width=3, color="black"),
+        dbc.Col(
+            dbc.Input(
+                type="number",
+                id="pub-year-row",
+                placeholder="E.g. 2020",
             ),
             width=3,
         )
@@ -337,14 +358,16 @@ layout = html.Div(children=[
     dbc.Form([bio_id_input, bio_cat_input, bio_subcat_input,
               name_input, indicative_input, methods_input,
               sample_type_input, sample_subtype_input, min_age_input,
-              pub_url_input, env_input, paleo_input, location_input,
-              coord_input, mars1_input, coord1_input,
+              pub_ref_input, pub_url_input, env_input, paleo_input,
+              location_input, coord_input, mars1_input, coord1_input,
               mars2_input, coord2_input], style={'width': '60vw', 'margin': 'auto', 'margin-top': '2vh'}),
     
     html.Hr(style={'borderWidth': "1vh", "width": "60vw", "color": "grey", "margin": "auto", "margin-top": "5vh"}),
     
-    dbc.Col(dbc.Button("Submit data", id="submit-data", color="primary", n_clicks=0), width="10vw", style={'margin': 'auto', 'margin-left': '20vw', 'margin-top':'2vh', 'height': '8vh'}),
-    html.P(id='submit-output', style={'color': 'black', 'font-family': 'Arial, sans-serif'}),
+    html.Div([
+        dbc.Col(dbc.Button("Submit data", id="submit-data", color="primary", n_clicks=0), width="10vw", style={'order':'1','margin': 'auto', 'margin-left':'0px', 'height': '8vh'}),
+        html.P(id='submit-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '26px', 'margin-left': '2vw'})
+        ], style = {'display': 'flex', 'flex-direction': 'row', 'justify-content': 'flex-start', 'align-items': 'center', 'margin':'auto',  'margin-top': '2vh', 'margin-bottom': '2vh', 'width': '60vw'}),
 
     ])
 
@@ -372,15 +395,19 @@ layout = html.Div(children=[
           Input('mars2-row', 'value'),
           Input('lat2-row', 'value'),
           Input('lon2-row', 'value'),
+          Input('pub-ref-row', 'value'),
+          Input('pub-year-row', 'value'),
           Input('store-biosignature', 'data'), 
           Input('submit-data', 'n_clicks'))
 def send_data_to_validation(bio_id, bio_cat, bio_subcat, name, indicative,
                             methods, sample_type, sample_subtype, min_age, max_age,
                             pub_url, paleo, n_samples, env, location, lat, lon, mars1,
-                            lat1, lon1, mars2, lat2, lon2, data, n_clicks):
+                            lat1, lon1, mars2, lat2, lon2, pub_ref, pub_year, data, n_clicks):
     if n_clicks > 0:
         df = pd.DataFrame(data)
+        data_status = '🟠 pending'
         df.loc[len(df.index)] = [bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype,
-                                n_samples, min_age, max_age, pub_url, env, paleo, location, lat, lon, mars1, lat1, lon1, mars2, lat2, lon2]
+                                n_samples, min_age, max_age, env, paleo, location, lat, lon, mars1, lat1, lon1, mars2, lat2, lon2, pub_ref, pub_year, pub_url, data_status]
         df.to_json('data/biosignature.json', orient='records')
+        n_clicks = 0
         return " ✅ Your data has been submitted and will shortly be validated"
