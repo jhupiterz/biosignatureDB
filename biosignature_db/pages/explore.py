@@ -117,8 +117,16 @@ def render_tab_content(tab_value):
                         ),
                         dbc.Modal(
                             [
-                                dbc.ModalHeader(dbc.ModalTitle("What data do you wish to validate?")),
-                                dbc.ModalBody("A small modal."),
+                                dbc.ModalHeader(dbc.ModalTitle("What data do you wish to validate?"), style={'margin': 'auto'}),
+                                dbc.ModalBody(children=[
+                                    dash_table.DataTable(id='data-to-validate', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                                                         row_selectable = True,
+                                                         selected_rows = [],
+                                                         style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
+                                                         style_cell = {'textAlign': 'left', 'padding': '0px'},
+                                                         style_table = {'order':'1', 'height':'20vh', 'width':'45vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
+                                    html.Div(id='validate-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
                             ],
                             id="validate-pop-up",
                             size="lg",
@@ -183,7 +191,7 @@ def create_bar_chart(hoverData, data):
         fig = plots.plot_bar_chart(grouped_df, lat, lon, loc)
         return dcc.Graph(figure=fig)
     else:
-        return html.P('Hover on a location on the map to display more data', className = 'hover-default-text')
+        return html.P('Hover on a location on the map to display more data', className = 'hover-default-text', style = {'font-family': 'Arial, sans-serif'})
 
 @callback(
     Output('hover-pie-chart', 'children'),
@@ -262,3 +270,52 @@ def toggle_modal(n_clicks, is_open):
     if n_clicks > 0:
         return not is_open
     return is_open
+
+@callback(
+    Output("data-to-validate", "data"),
+    Output("data-to-validate", "columns"),
+    Output("data-to-validate", "css"),
+    Input("store-biosignature", "data")
+)
+def generate_datatable(data):
+    df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
+                             'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
+                             'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
+    df = df[df['status'] == '🟠 pending']
+    print(df.head(2))
+    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+
+@callback(
+    Output('validate-data-modal-body', 'children'),
+    Input('data-to-validate', 'data'))
+def generate_modal_mody(data_to_validate):
+    if data_to_validate:
+        return [html.Button(
+                    "Validate data",
+                    className="doc-link-validate",
+                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-top': '3vh'},
+                    id = "btn-validate-data-modal",
+                    n_clicks= 0),
+                html.P(id='validate-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
+    return "No pending data to validate"
+
+@callback(
+    Output('validate-output', 'children'),
+    Input('data-to-validate', 'data'),
+    Input('store-biosignature', 'data'),
+    Input('data-to-validate', 'selected_rows'),
+    Input("btn-validate-data-modal", "n_clicks"),
+    prevent_initial_call=True,
+)
+def func(data_to_validate, data, selected_rows, n_clicks):
+    if n_clicks > 0:
+        df = pd.DataFrame(data)
+        df_to_validate = pd.DataFrame(data_to_validate)
+        df_selected = df_to_validate.iloc[selected_rows]
+        for index, row in df.iterrows():
+            for index_, row_ in df_selected.iterrows():
+                if row['biosignature_id'] == row_['biosignature_id']:
+                    df.loc[index, 'status'] = ' 🟢 validated'
+        df.to_csv('../raw_data/biosignature.csv', index=False)
+        df.to_json('data/biosignature.json', orient='records')
+        return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]

@@ -150,6 +150,22 @@
     background-color: #e3d1ff;
     color: #13070C;
   }
+
+
+  .doc-link-validate {
+    order: 2;
+    border: 1px solid #13070C;
+    padding: 6px 15px;
+    border-radius: 5px;
+    color: black;
+    font-size: 16px;
+    width: 150px;
+    height: 40px;
+    background-color: #e3d1ff;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 0px;
+  }
   
   /* Main body */
   
@@ -169,6 +185,7 @@
     color: grey;
     text-align: center;
     margin-top: 23vh;
+    font-family: 'Arial, sans-serif';
   }
   
   .main-panel {
