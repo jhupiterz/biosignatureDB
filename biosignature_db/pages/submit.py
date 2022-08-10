@@ -7,12 +7,13 @@ from biosignature_db import data
 
 dash.register_page(__name__)
 
+# Make sure entered ID is unique and follows the pattern
 bio_id_input = dbc.Row(
     [
         dbc.Label("Biosignature ID", html_for="example-email-row", width=3, color="black"),
         dbc.Col(
             dbc.Input(
-                type="number", id="bio-id-row", placeholder="E.g. 24"
+                type="number", id="bio-id-row", placeholder="Must be unique", step=1
             ),
             width=5,
         ),
@@ -20,6 +21,7 @@ bio_id_input = dbc.Row(
     className="mb-3",
 )
 
+# Make it dropdown menu
 bio_cat_input = dbc.Row(
     [
         dbc.Label("Biosignature category", html_for="example-password-row", width=3, color="black"),
@@ -35,6 +37,7 @@ bio_cat_input = dbc.Row(
     className="mb-3",
 )
 
+# Make it dropdown menu
 bio_subcat_input = dbc.Row(
     [
         dbc.Label("Biosignature sub-category", html_for="example-radios-row", width=3, color="black"),
@@ -95,6 +98,7 @@ methods_input = dbc.Row(
     className="mb-3",
 )
 
+# Make it dropdown menu
 sample_type_input = dbc.Row(
     [
         dbc.Label("Sample type", html_for="example-radios-row", width=3, color="black"),
@@ -119,6 +123,7 @@ sample_type_input = dbc.Row(
     className="mb-3",
 )
 
+# Make it dropdown menu
 sample_subtype_input = dbc.Row(
     [
         dbc.Label("Sample subtype", html_for="example-radios-row", width=3, color="black"),
@@ -134,6 +139,7 @@ sample_subtype_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure it's coherent and in the right order
 min_age_input = dbc.Row(
     [
         dbc.Label("Min. age (years)", html_for="example-radios-row", width=3, color="black"),
@@ -158,6 +164,7 @@ min_age_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure reference is in right format
 pub_ref_input = dbc.Row(
     [
         dbc.Label("Pub. reference", html_for="example-radios-row", width=3, color="black"),
@@ -182,6 +189,7 @@ pub_ref_input = dbc.Row(
     className="mb-3",
 )
 
+# Reformat link
 pub_url_input = dbc.Row(
     [
         dbc.Label("Publication URL", html_for="example-radios-row", width=3, color="black"),
@@ -242,6 +250,7 @@ location_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure it's in right format
 coord_input = dbc.Row(
     [
         dbc.Label("Latitude", html_for="example-radios-row", width=3, color="black"),
@@ -266,6 +275,7 @@ coord_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure it's in right format
 mars1_input = dbc.Row(
     [
         dbc.Label("Mars counterpart (1)", html_for="example-radios-row", width=3, color="black"),
@@ -281,6 +291,7 @@ mars1_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure it's in right format
 coord1_input = dbc.Row(
     [
         dbc.Label("Mars latitude (1)", html_for="example-radios-row", width=3, color="black"),
@@ -305,6 +316,7 @@ coord1_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure it's in right format
 mars2_input = dbc.Row(
     [
         dbc.Label("Mars counterpart (2)", html_for="example-radios-row", width=3, color="black"),
@@ -320,6 +332,7 @@ mars2_input = dbc.Row(
     className="mb-3",
 )
 
+# Make sure it's in right format
 coord2_input = dbc.Row(
     [
         dbc.Label("Mars latitude (2)", html_for="example-radios-row", width=3, color="black"),

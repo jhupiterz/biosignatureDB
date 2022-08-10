@@ -10,8 +10,8 @@ app = dash.Dash(
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", 'charSet':'“UTF-8”'}])
 
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'hello': 'world',
-    'admin': 'password'
+    'guest-user': 'guest-password',
+    'admin': 'admin-password'
 }
 
 auth = dash_auth.BasicAuth(
