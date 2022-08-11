@@ -247,8 +247,21 @@ def generate_datatable(data):
                              'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
                              'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
     df = df[df['status'] == '🟠 pending']
-    print(df.head(2))
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+
+@callback(
+    Output("data-to-edit", "data"),
+    Output("data-to-edit", "columns"),
+    Output("data-to-edit", "css"),
+    Input("store-biosignature", "data")
+)
+def generate_datatable(data):
+    df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
+                             'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
+                             'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
+    df = df[df['status'] == ' 🟢 validated']
+    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+
 
 @callback(
     Output("data-tab-buttons", "children"),
@@ -267,7 +280,7 @@ def generate_tab_buttons(data):
                         html.Button(
                              "Validate data",
                              className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '2vw'},
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1vw'},
                              id = "btn-validate-data",
                              n_clicks= 0
                         ),
@@ -280,22 +293,65 @@ def generate_tab_buttons(data):
                                                          selected_rows = [],
                                                          style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                                          style_cell = {'textAlign': 'left', 'padding': '0px'},
-                                                         style_table = {'order':'1', 'height':'20vh', 'width':'45vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
+                                                         style_table = {'order':'1', 'height':'20vh', 'width':'60vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
                                     html.Div(id='validate-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
                                 ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
                             ],
                             id="validate-pop-up",
-                            size="lg",
+                            size="xl",
                             style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
                             is_open=False,
                         ),
                         dcc.Download(id="download-csv"),
-                        html.A(
-                            "Submit new data", 
-                            href="/submit",
-                            className="doc-link-submit",
-                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '3'}
-                        )]
+                        html.Button(
+                            "Edit database",
+                             className="doc-link-download",
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1vw'},
+                             id = "btn-edit-data",
+                             n_clicks= 0
+                        ),
+                        dbc.Modal(
+                            [
+                                dbc.ModalHeader(dbc.ModalTitle("Do you wish to"), style={'margin': 'auto'}),
+                                dbc.ModalBody(children=[
+                                    html.Div([
+                                        html.Button(
+                                            'Edit existing data',
+                                            className="doc-link-download",
+                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
+                                            id='edit-data-btn',
+                                            n_clicks= 0),
+                                        dbc.Modal(
+                                            [
+                                                dbc.ModalHeader(dbc.ModalTitle("What data do you wish to edit?"), style={'margin': 'auto'}),
+                                                dbc.ModalBody(children=[
+                                                    dash_table.DataTable(id='data-to-edit', editable = True, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                                                                        style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
+                                                                        style_cell = {'textAlign': 'left', 'padding': '0px'},
+                                                                        style_table = {'order':'1', 'height':'30vh', 'width':'65vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
+                                                    html.Div(id='edit-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                                            ],
+                                            id="edit-pop-up-content",
+                                            size="xl",
+                                            style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
+                                            is_open=False,
+                                        ),
+                                        html.A(
+                                            "Submit new data", 
+                                            href="/submit",
+                                            className="doc-link-download",
+                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
+                                        )],
+                                        style = {'display':'flex', 'flex-direction': 'row', 'align-items': 'center'})
+                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                            ],
+                            id="edit-pop-up",
+                            size="lg",
+                            style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
+                            is_open=False,
+                        ),
+                ]
     return [html.Button(
                              "Download data",
                              className="doc-link-download",
@@ -304,12 +360,14 @@ def generate_tab_buttons(data):
                              n_clicks= 0
                         ),
             dcc.Download(id="download-csv"),
-                        html.A(
-                            "Submit new data", 
-                            href="/submit",
-                            className="doc-link-submit",
-                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-left': '6vw'}
-                        )]
+            html.Button(
+                            "Edit database",
+                             className="doc-link-download",
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '2vw'},
+                             id = "btn-edit-data",
+                             n_clicks= 0
+                        )
+                ]
 
 @callback(
     Output('validate-data-modal-body', 'children'),
@@ -324,6 +382,20 @@ def generate_modal_mody(data_to_validate):
                     n_clicks= 0),
                 html.P(id='validate-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
     return "No pending data to validate"
+
+@callback(
+    Output('edit-data-modal-body', 'children'),
+    Input('data-to-edit', 'data'))
+def generate_modal_mody(data_to_validate):
+    if data_to_validate:
+        return [html.Button(
+                    "Submit edits",
+                    className="doc-link-validate",
+                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-top': '3vh'},
+                    id = "btn-edit-data-modal",
+                    n_clicks= 0),
+                html.P(id='edit-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
+    return "No pending data to edit"
 
 @callback(
     Output('validate-output', 'children'),
@@ -345,3 +417,19 @@ def func(data_to_validate, data, selected_rows, n_clicks):
         df.to_csv('../raw_data/biosignature.csv', index=False)
         df.to_json('data/biosignature.json', orient='records')
         return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
+
+@callback(
+    Output('edit-pop-up', 'is_open'),
+    Input('btn-edit-data', 'n_clicks'),
+)
+def generate_pop_up(n_clicks):
+    if n_clicks > 0:
+        return True
+
+@callback(
+    Output('edit-pop-up-content', 'is_open'),
+    Input('edit-data-btn', 'n_clicks'),
+)
+def generate_pop_up(n_clicks):
+    if n_clicks > 0:
+        return True
