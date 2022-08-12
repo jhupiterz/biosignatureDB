@@ -41,16 +41,22 @@
   }
   
   /* Navbar */
-  
-  .navbar {
-    display: flex;
-    align-items: center;
-  }
 
   .menu {
-    font-weight: bold;
-    font-size: 35px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: -1vw;
+  }
+
+  .menu-link {
+    font-size: 20px;
     color: white;
+  }
+
+  .menu-link:hover {
+    color: #e3d1ff;
   }
   
   /* Brain logo */
@@ -61,7 +67,7 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: center;
+    justify-content: flex;
   }
   
   .logo-banner h3 {
@@ -69,13 +75,13 @@
     margin-top: 0.2rem;
     font-weight: 400;
     white-space: nowrap;
-    margin-left: 1.2rem;
+    margin-left: 1rem;
   }
   
   .logo-banner img {
     display: inline;
     width: 3rem;
-    margin-left: 1vw;
+    margin-left: -0.5vw;
   }
 
   .logo-banner:hover {

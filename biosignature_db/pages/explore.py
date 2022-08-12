@@ -23,7 +23,7 @@ layout = html.Div(children=[
                             dbc.Tab(label="Dashboard", tab_id="dashboard"),
                             dbc.Tab(label="Data", tab_id="data"),
                         ],
-                        style = {'margin-top': '0.5vh'},
+                        style = {'margin-top': '0.5vh', 'margin-left': '0.1vw'},
                         id="card-tabs",
                         active_tab="dashboard",
                     ), style= {'z-index': '1000'}
@@ -64,7 +64,7 @@ def render_tab_content(tab_value):
             
             html.Div([
                 html.Div([
-                    html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-24px', 'margin-left': '4vw', 'order': '1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
+                    html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-40px', 'margin-left': '4vw', 'order': '1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                     html.Div(id = 'mars-map', children = [],
                             style = {'width': '40vw', 'height': '30vh', 'order': '2', 'margin-top': '-12vh', 'margin-left': '2vw'})],
                 style = {'order':'1','display':'flex', 'flex-direction': 'column', 'align-items': 'center','margin-top': '0vh', 'height': '25vh'}),
@@ -74,7 +74,7 @@ def render_tab_content(tab_value):
                         dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                             style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                             style_cell = {'textAlign': 'left', 'padding': '0px'},
-                                            style_table = {'height':'500px', 'width':'30vw', 'height':'275px', 'overflow': 'auto'},
+                                            style_table = {'width':'30vw', 'height':'37.5vh', 'overflow': 'auto'},
                                             style_data_conditional=[
                                                                         {
                                                                             'if': {'row_index': 'even'},
@@ -89,9 +89,9 @@ def render_tab_content(tab_value):
                                                                             'color': 'black'
                                                                         }
                                                                     ])],
-                        style = {'order':'2'})],
+                        style = {'order':'2', 'height': '38vh'})],
                 style = {'order':'2','display':'flex', 'flex-direction': 'column', 'align-items': 'center',
-                        'width':'30vw', 'height':'37vh', 'margin-top': '10vh', 'margin-left': '1vw'})],
+                        'width':'30vw', 'height':'45vh', 'margin-top': '7vh', 'margin-left': '1vw'})],
                 className = 'left-panel')],
             
             className = 'main-body')], style = {'height': '80vh','margin':'auto', 'margin-top': '-4.5vh', 'width': '98vw', 'backgroundColor': '#e6e6e6', 'border-radius': '10px'})
@@ -99,8 +99,8 @@ def render_tab_content(tab_value):
         return html.Div([
                     html.Div([
                         html.P(['👋 Make sure to read the ',
-                                html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': 'blue', 'font-weight': 'bold'}),
-                                ' before submitting any new data'], style = {'order':'1', 'color':'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw', 'margin-top': '1vh'}),
+                                html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': '#a0a4e4', 'font-weight': 'bold'}),
+                                ' before submitting any new data'], style = {'order':'1', 'color':'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.3vw', 'margin-top': '1vh'}),
                             
                         html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw'}),    
                             
@@ -108,7 +108,7 @@ def render_tab_content(tab_value):
                     dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                 style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                 style_cell = {'textAlign': 'left', 'padding': '0px'},
-                                style_table = {'height':'65vh', 'width':'95vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'},
+                                style_table = {'height':'65vh', 'width':'95vw', 'overflow': 'auto', 'margin': 'auto', 'margin-bottom': '2vh'},
                                 style_data_conditional=[
                                                             {
                                                                 'if': {'row_index': 'even'},
@@ -249,18 +249,18 @@ def generate_datatable(data):
     df = df[df['status'] == '🟠 pending']
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
 
-@callback(
-    Output("data-to-edit", "data"),
-    Output("data-to-edit", "columns"),
-    Output("data-to-edit", "css"),
-    Input("store-biosignature", "data")
-)
-def generate_datatable(data):
-    df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
-                             'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
-                             'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
-    df = df[df['status'] == ' 🟢 validated']
-    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+# @callback(
+#     Output("data-to-edit", "data"),
+#     Output("data-to-edit", "columns"),
+#     Output("data-to-edit", "css"),
+#     Input("store-biosignature", "data")
+# )
+# def generate_datatable(data):
+#     df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
+#                              'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
+#                              'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
+#     df = df[df['status'] == ' 🟢 validated']
+#     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
 
 
 @callback(
@@ -303,67 +303,73 @@ def generate_tab_buttons(data):
                             is_open=False,
                         ),
                         dcc.Download(id="download-csv"),
-                        html.Button(
-                            "Edit database",
-                             className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1vw'},
-                             id = "btn-edit-data",
-                             n_clicks= 0
-                        ),
-                        dbc.Modal(
-                            [
-                                dbc.ModalHeader(dbc.ModalTitle("Do you wish to"), style={'margin': 'auto'}),
-                                dbc.ModalBody(children=[
-                                    html.Div([
-                                        html.Button(
-                                            'Edit existing data',
-                                            className="doc-link-download",
-                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
-                                            id='edit-data-btn',
-                                            n_clicks= 0),
-                                        dbc.Modal(
-                                            [
-                                                dbc.ModalHeader(dbc.ModalTitle("What data do you wish to edit?"), style={'margin': 'auto'}),
-                                                dbc.ModalBody(children=[
-                                                    dash_table.DataTable(id='data-to-edit', editable = True, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
-                                                                        style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
-                                                                        style_cell = {'textAlign': 'left', 'padding': '0px'},
-                                                                        style_table = {'order':'1', 'height':'30vh', 'width':'65vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
-                                                    html.Div(id='edit-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                                            ],
-                                            id="edit-pop-up-content",
-                                            size="xl",
-                                            style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
-                                            is_open=False,
-                                        ),
-                                        html.A(
+                        html.A(
                                             "Submit new data", 
                                             href="/submit",
                                             className="doc-link-download",
                                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
-                                        )],
-                                        style = {'display':'flex', 'flex-direction': 'row', 'align-items': 'center'})
-                                ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                            ],
-                            id="edit-pop-up",
-                            size="lg",
-                            style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
-                            is_open=False,
-                        ),
+                                        ),
+                        # html.Button(
+                        #     "Edit database",
+                        #      className="doc-link-download",
+                        #      style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1vw'},
+                        #      id = "btn-edit-data",
+                        #      n_clicks= 0
+                        # ),
+                        # dbc.Modal(
+                        #     [
+                        #         dbc.ModalHeader(dbc.ModalTitle("Do you wish to"), style={'margin': 'auto'}),
+                        #         dbc.ModalBody(children=[
+                        #             html.Div([
+                        #                 html.Button(
+                        #                     'Edit existing data',
+                        #                     className="doc-link-download",
+                        #                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
+                        #                     id='edit-data-btn',
+                        #                     n_clicks= 0),
+                        #                 dbc.Modal(
+                        #                     [
+                        #                         dbc.ModalHeader(dbc.ModalTitle("What data do you wish to edit?"), style={'margin': 'auto'}),
+                        #                         dbc.ModalBody(children=[
+                        #                             dash_table.DataTable(id='data-to-edit', editable = True, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                        #                                                 style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
+                        #                                                 style_cell = {'textAlign': 'left', 'padding': '0px'},
+                        #                                                 style_table = {'order':'1', 'height':'30vh', 'width':'65vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
+                        #                             html.Div(id='edit-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                        #                         ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                        #                     ],
+                        #                     id="edit-pop-up-content",
+                        #                     size="xl",
+                        #                     style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
+                        #                     is_open=False,
+                        #                 ),
+                        #                 html.A(
+                        #                     "Submit new data", 
+                        #                     href="/submit",
+                        #                     className="doc-link-download",
+                        #                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
+                        #                 )],
+                        #                 style = {'display':'flex', 'flex-direction': 'row', 'align-items': 'center'})
+                        #         ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
+                        #     ],
+                        #     id="edit-pop-up",
+                        #     size="lg",
+                        #     style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
+                        #     is_open=False,
+                        # ),
                 ]
     return [html.Button(
                              "Download data",
                              className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1'},
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
                              id = "btn-download-data",
                              n_clicks= 0
                         ),
             dcc.Download(id="download-csv"),
             html.Button(
-                            "Edit database",
+                            "Submit  new data",
                              className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '2vw'},
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '0.2vw'},
                              id = "btn-edit-data",
                              n_clicks= 0
                         )
@@ -383,19 +389,19 @@ def generate_modal_mody(data_to_validate):
                 html.P(id='validate-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
     return "No pending data to validate"
 
-@callback(
-    Output('edit-data-modal-body', 'children'),
-    Input('data-to-edit', 'data'))
-def generate_modal_mody(data_to_validate):
-    if data_to_validate:
-        return [html.Button(
-                    "Submit edits",
-                    className="doc-link-validate",
-                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-top': '3vh'},
-                    id = "btn-edit-data-modal",
-                    n_clicks= 0),
-                html.P(id='edit-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
-    return "No pending data to edit"
+# @callback(
+#     Output('edit-data-modal-body', 'children'),
+#     Input('data-to-edit', 'data'))
+# def generate_modal_mody(data_to_validate):
+#     if data_to_validate:
+#         return [html.Button(
+#                     "Submit edits",
+#                     className="doc-link-validate",
+#                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-top': '3vh'},
+#                     id = "btn-edit-data-modal",
+#                     n_clicks= 0),
+#                 html.P(id='edit-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
+#     return "No pending data to edit"
 
 @callback(
     Output('validate-output', 'children'),
@@ -418,13 +424,13 @@ def func(data_to_validate, data, selected_rows, n_clicks):
         df.to_json('data/biosignature.json', orient='records')
         return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
 
-@callback(
-    Output('edit-pop-up', 'is_open'),
-    Input('btn-edit-data', 'n_clicks'),
-)
-def generate_pop_up(n_clicks):
-    if n_clicks > 0:
-        return True
+# @callback(
+#     Output('edit-pop-up', 'is_open'),
+#     Input('btn-edit-data', 'n_clicks'),
+# )
+# def generate_pop_up(n_clicks):
+#     if n_clicks > 0:
+#         return True
 
 @callback(
     Output('edit-pop-up-content', 'is_open'),

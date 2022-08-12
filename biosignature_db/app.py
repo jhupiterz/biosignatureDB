@@ -10,8 +10,8 @@ app = dash.Dash(
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", 'charSet':'“UTF-8”'}])
 
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'guest-user': 'guest-password',
-    'admin': 'admin-password'
+    'guest': 'guest',
+    'admin': 'admin'
 }
 
 auth = dash_auth.BasicAuth(
@@ -32,25 +32,17 @@ app.layout = html.Div(
                             src="/assets/logo.png",
                             alt="biosignature database"
                         ),
-                        html.H3("Biosignature Database")
+                        html.H3("biosignature database")
                     ],
                     href="/",
                     target="_self",
                     className="logo-banner",
                 ),
                 html.Div([
-                dbc.DropdownMenu(
-                    children=[
-                        dbc.DropdownMenuItem("Explore", href="/"),
-                        dbc.DropdownMenuItem("Submit new data", href='/submit'),
-                        dbc.DropdownMenuItem("Documentation", href='https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', target = "_blank")
-                    ],
-                    nav=True,
-                    in_navbar=True,
-                    label="Menu",
-                    size = 'md',
-                    className = 'menu'
-                )])
+                    html.A('Explore', href='/explore', className="menu-link",  style = {'order': '1', 'margin-right': '2vw'}),
+                    html.A('Submit new data', href='/submit', className="menu-link", style = {'order': '2', 'margin-right': '2vw'}),
+                    html.A('Documentation', href='https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', className="menu-link", style = {'order': '3'}),
+                ], className = "menu"),
             ],
             className="banner",
         ),
