@@ -269,7 +269,7 @@ def generate_datatable(data):
     Input("session-username", "data")
 )
 def generate_tab_buttons(data):
-    if data['username'] == 'admin':
+    if data['is_authorized'] == True:
         return  [html.Button(
                              "Download data",
                              className="doc-link-download",
@@ -358,7 +358,7 @@ def generate_tab_buttons(data):
                         #     is_open=False,
                         # ),
                 ]
-    elif data['username'] == 'user':
+    else:
         return [html.Button(
                              "Download data",
                              className="doc-link-download",
@@ -367,13 +367,12 @@ def generate_tab_buttons(data):
                              n_clicks= 0
                         ),
             dcc.Download(id="download-csv"),
-            html.Button(
-                            "Submit  new data",
-                             className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '0.2vw'},
-                             id = "btn-edit-data",
-                             n_clicks= 0
-                        )
+            html.A(
+                    "Submit new data", 
+                    href="/submit",
+                    className="doc-link-download",
+                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
+                ),
                 ]
 
 @callback(
