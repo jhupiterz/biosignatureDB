@@ -1,11 +1,10 @@
 import pandas as pd
 import dash
-from dash import html, callback, dcc
-from dash.dependencies import Input, Output
+from dash import html, callback, dcc, Input, Output
 import dash_bootstrap_components as dbc
 from biosignature_db import data
 
-dash.register_page(__name__)
+dash.register_page(__name__, path='/submit')
 
 # Make sure entered ID is unique and follows the pattern
 bio_id_input = dbc.Row(

@@ -89,6 +89,18 @@
     color: #e3d1ff;
   }
   
+ .profile-image {
+    width: 18vw;
+    height: 18vw;
+  }
+
+  .profile-image:hover {
+    width: 19vw;
+    height: 19vw;
+    padding: 0px;
+    box-shadow: #13070C 0px 0px 15px;
+  }
+
   /* Title */
   
   h1 {

@@ -1,7 +1,6 @@
 import pandas as pd
 import dash
-from dash import html, dcc, callback, dash_table
-from dash.dependencies import Input, Output, State
+from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
 from biosignature_db import plots
 from biosignature_db import data
@@ -86,7 +85,8 @@ def render_tab_content(tab_value):
                                                                         },
                                                                         {
                                                                             'if': {'column_id': 'pub_url'},
-                                                                            'color': 'black'
+                                                                            'color': 'black',
+                                                                            'padding-top': '17px'
                                                                         }
                                                                     ])],
                         style = {'order':'2', 'height': '38vh'})],
@@ -120,7 +120,8 @@ def render_tab_content(tab_value):
                                                             },
                                                             {
                                                                 'if': {'column_id': 'pub_url'},
-                                                                'color': 'black'
+                                                                'color': 'black',
+                                                                'padding-top': '17px'
                                                             }
                                                         ])], style = {'height': '79vh', 'display': 'flex', 'flex-direction': 'column'})
 
@@ -214,7 +215,7 @@ def generate_datatable(data):
     df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
                              'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
                              'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
-    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
 
 @callback(
     Output("download-csv", "data"),
@@ -268,7 +269,6 @@ def generate_datatable(data):
     Input("session-username", "data")
 )
 def generate_tab_buttons(data):
-    print(data)
     if data['username'] == 'admin':
         return  [html.Button(
                              "Download data",
