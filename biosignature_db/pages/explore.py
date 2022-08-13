@@ -358,7 +358,8 @@ def generate_tab_buttons(data):
                         #     is_open=False,
                         # ),
                 ]
-    return [html.Button(
+    elif data['username'] == 'user':
+        return [html.Button(
                              "Download data",
                              className="doc-link-download",
                              style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
