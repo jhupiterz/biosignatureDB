@@ -21,7 +21,7 @@ admin_username_input = dbc.Col(
                 type="text", value="admin", id="admin-username", placeholder="admin", step=1
             ),
             width=8,
-        ),
+        )
     ],
     className="mb-3",
 )
