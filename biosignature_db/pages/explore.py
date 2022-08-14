@@ -98,9 +98,7 @@ def render_tab_content(tab_value):
     else:
         return html.Div([
                     html.Div([
-                        html.P(['👋 Make sure to read the ',
-                                html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': '#a0a4e4', 'font-weight': 'bold'}),
-                                ' before submitting any new data'], style = {'order':'1', 'color':'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.3vw', 'margin-top': '1vh'}),
+                        html.P(id='datatable-message', style = {'order':'1', 'color':'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.3vw', 'margin-top': '1vh'}),
                             
                         html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw'}),    
                             
@@ -374,6 +372,17 @@ def generate_tab_buttons(data):
                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
                 ),
                 ]
+
+@callback(
+    Output('datatable-message', 'children'),
+    Input('session-username', 'data')
+)
+def generate_message(data):
+    if (data['is_authorized'] == True and data['username'] == 'admin') or (data['username'] == 'user'):
+        return ['👋 Make sure to read the ',
+                html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': '#a0a4e4', 'font-weight': 'bold'}),
+                ' before submitting any new data']
+    return ['👋 Log in for more features (top right corner)']
 
 @callback(
     Output('validate-data-modal-body', 'children'),
