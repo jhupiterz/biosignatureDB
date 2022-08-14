@@ -28,9 +28,9 @@ layout = html.Div(children=[
                     ), style= {'z-index': '1000'}
                 ),
                 dbc.CardBody(html.P(id="card-content", className="card-text")),
-            ]),
+            ], style = {'z-index': 0}),
 
-    ])
+    ], style={'z-index': '1'})
 
 @callback(Output('card-content', 'children'),
           Input('card-tabs', 'active_tab'))

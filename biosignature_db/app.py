@@ -86,7 +86,7 @@ app.layout = html.Div(
         
         dbc.Modal(
             [
-                dbc.ModalHeader(dbc.ModalTitle("You need to login"), style={'margin': 'auto'}),
+                dbc.ModalHeader(dbc.ModalTitle("How do you wish to log in?"), style={'margin': 'auto'}),
                 dbc.ModalBody(children=[
                                     html.Div(id='login-popup-content', children = [
                                         html.Button(id='user-login-button', children=["Login as user"], n_clicks=0, className='btn btn-primary', style={'margin-right': '1vw'}),
