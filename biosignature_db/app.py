@@ -1,5 +1,5 @@
 import dash
-from dash import html, dcc, Input, Output, State
+from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 from biosignature_db import user_profile
 
@@ -31,7 +31,7 @@ admin_password_input = dbc.Col(
         dbc.Label("Password", html_for="example-email-row", width=3, color="black"),
         dbc.Col(
             dbc.Input(
-                type="text", id="admin-password", placeholder="enter password", step=1
+                type="password", id="admin-password", placeholder="enter password", step=1
             ),
             width=10,
         ),
@@ -69,7 +69,7 @@ app.layout = html.Div(
 
         dcc.Store(id='session-username', data = {'username': user_profile.username,
                                                  'is_authorized': user_profile.is_authorized},
-                                         storage_type='session'),
+                                         storage_type='memory'),
         
         dbc.Modal(
             [

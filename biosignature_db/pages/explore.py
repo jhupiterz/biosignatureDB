@@ -269,7 +269,7 @@ def generate_datatable(data):
     Input("session-username", "data")
 )
 def generate_tab_buttons(data):
-    if data['is_authorized'] == True:
+    if data['is_authorized'] == True and data['username'] == 'admin':
         return  [html.Button(
                              "Download data",
                              className="doc-link-download",
@@ -358,7 +358,7 @@ def generate_tab_buttons(data):
                         #     is_open=False,
                         # ),
                 ]
-    else:
+    elif data['username'] == 'user':
         return [html.Button(
                              "Download data",
                              className="doc-link-download",
