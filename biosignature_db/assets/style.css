@@ -98,6 +98,10 @@
     font-size: 16px;
   }
 
+  .dropdown-admin-logged-in:hover {
+    cursor: pointer;
+  }
+
   .dropdown-user-logged-in {
     width: 6vw;
     color: black;
@@ -107,6 +111,10 @@
     font-size: 16px;
   }
 
+  .dropdown-user-logged-in:hover {
+    cursor: pointer;
+  }
+
   .dropdown-not-logged-in {
     width: 10vw;
     color: black;
@@ -114,6 +122,10 @@
     border: none;
     border-radius: 0;
     font-size: 16px;
+  }
+
+  .dropdown-not-logged-in:hover {
+    cursor: pointer;
   }
 
   /* Title */
