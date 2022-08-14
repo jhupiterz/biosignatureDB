@@ -41,6 +41,29 @@ admin_password_input = dbc.Col(
 
 login_btn = dbc.Button("log in", id="login-btn", color="primary", n_clicks=0, style = {'margin-top': '1vh'})
 
+dropdown_dbc = dbc.DropdownMenu(
+    label="🟠 Not logged in",
+    children=[
+        dbc.DropdownMenuItem("Log in")
+    ],
+    style = {'order': '4', 'backgroundColor': 'blue', 'z-index': '1000000'},
+)
+
+dropdown_not_logged_in = dcc.Dropdown(id='dropdown-not-logged-in', options=['Log in'], placeholder='🟠 Not logged in',
+                                      style={'width': '10vw', 'color': 'black',
+                                             'z-index': '1000000', 'backgroundColor': 'rgba(0,0,0,0)',
+                                             'border': 'none', 'border-radius': '0', 'font-size': '16px'})
+
+dropdown_user_logged_in = dcc.Dropdown(id='dropdown-user-logged-in', options=['Log out'], placeholder='🟢 User',
+                                       style={'width': '6vw', 'color': 'black',
+                                             'z-index': '1000000', 'backgroundColor': 'rgba(0,0,0,0)',
+                                             'border': 'none', 'border-radius': '0', 'font-size': '16px'})
+
+dropdown_admin_logged_in = dcc.Dropdown(id='dropdown-admin-logged-in', options=['Log out'], placeholder='🟢 Admin',
+                                        style={'width': '7vw', 'color': 'black',
+                                               'z-index': '1000000', 'backgroundColor': 'rgba(0,0,0,0)',
+                                               'border': 'none', 'border-radius': '0', 'font-size': '16px'})
+
 app.layout = html.Div(
     [
         # Banner ------------------------------------------------------------
@@ -61,7 +84,8 @@ app.layout = html.Div(
                 html.Div([
                     html.A('Explore', href='/', className="menu-link",  style = {'order': '1', 'margin-right': '2vw'}),
                     html.A('Submit new data', href='/submit', className="menu-link", style = {'order': '2', 'margin-right': '2vw'}),
-                    html.A('Documentation', href='https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', className="menu-link", style = {'order': '3'}),
+                    html.A('Documentation', href='https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', className="menu-link", style = {'order': '3', 'margin-right': '2vw'}),
+                    html.Div(id='login-dropdown', style={'order': '4'})
                 ], className = "menu"),
             ],
             className="banner",
@@ -121,15 +145,6 @@ app.layout = html.Div(
     )
 
 @app.callback(
-    Output('login-popup', 'is_open'),
-    Input('session-username', 'data')
-)
-def store_session_username(data):
-    username = data['username']
-    if username == '':
-        return True
-
-@app.callback(
     Output('session-username', 'data'),
     Input('admin-login-button', 'n_clicks'),
     Input('user-login-button', 'n_clicks'),
@@ -165,6 +180,31 @@ def generate_admin_login(data):
     elif data['username'] == 'user':
         return False
     return True
+
+@app.callback(
+    Output('login-popup', 'is_open'),
+    Input('session-username', 'data'),
+    Input('dropdown-not-logged-in', 'value'),
+    prevent_initial_call=True
+)
+def login(data, value):
+    username = data['username']
+    if username == 'user' or username == 'admin':
+        return False
+    if value == 'Log in':
+        return True
+
+@app.callback(
+    Output('login-dropdown', 'children'),
+    Input('session-username', 'data'),
+)
+def generate_login_dropdown(data):
+    if data['username'] == 'user':
+        return dropdown_user_logged_in
+    elif data['username'] == 'admin' and data['is_authorized'] == True:
+        return dropdown_admin_logged_in
+    else:
+        return dropdown_not_logged_in
 
 # Runs the app ------------------------------------------------------------
 if __name__ == '__main__':
