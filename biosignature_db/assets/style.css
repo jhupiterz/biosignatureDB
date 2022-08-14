@@ -88,21 +88,36 @@
     cursor: pointer;
     color: #e3d1ff;
   }
-  
- .profile-image {
-    width: 18vw;
-    height: 18vw;
+
+  .dropdown-admin-logged-in {
+    width: 7vw;
+    color: black;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
   }
 
-  .profile-image:hover {
-    width: 19vw;
-    height: 19vw;
-    padding: 0px;
-    box-shadow: #13070C 0px 0px 15px;
+  .dropdown-user-logged-in {
+    width: 6vw;
+    color: black;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
+  }
+
+  .dropdown-not-logged-in {
+    width: 10vw;
+    color: black;
+    background-color: rgba(0,0,0,0);
+    border: none;
+    border-radius: 0;
+    font-size: 16px;
   }
 
   /* Title */
-  
+
   h1 {
     font-size: 2rem;
     text-align: center;

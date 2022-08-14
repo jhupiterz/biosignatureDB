@@ -34,35 +34,24 @@ admin_password_input = dbc.Col(
                 type="password", id="admin-password", placeholder="enter password", step=1
             ),
             width=10,
-        ),
+        )
     ],
     className="mb-3",
 )
 
 login_btn = dbc.Button("log in", id="login-btn", color="primary", n_clicks=0, style = {'margin-top': '1vh'})
 
-dropdown_dbc = dbc.DropdownMenu(
-    label="🟠 Not logged in",
-    children=[
-        dbc.DropdownMenuItem("Log in")
-    ],
-    style = {'order': '4', 'backgroundColor': 'blue', 'z-index': '1000000'},
-)
-
 dropdown_not_logged_in = dcc.Dropdown(id='dropdown-not-logged-in', options=['Log in'], placeholder='🟠 Not logged in',
-                                      style={'width': '10vw', 'color': 'black',
-                                             'z-index': '1000000', 'backgroundColor': 'rgba(0,0,0,0)',
-                                             'border': 'none', 'border-radius': '0', 'font-size': '16px'})
+                                      clearable=False, searchable=False,
+                                      className='dropdown-not-logged-in')
 
 dropdown_user_logged_in = dcc.Dropdown(id='dropdown-user-logged-in', options=['Log out'], placeholder='🟢 User',
-                                       style={'width': '6vw', 'color': 'black',
-                                             'z-index': '1000000', 'backgroundColor': 'rgba(0,0,0,0)',
-                                             'border': 'none', 'border-radius': '0', 'font-size': '16px'})
+                                       clearable=False, searchable=False,
+                                       className='dropdown-user-logged-in')
 
 dropdown_admin_logged_in = dcc.Dropdown(id='dropdown-admin-logged-in', options=['Log out'], placeholder='🟢 Admin',
-                                        style={'width': '7vw', 'color': 'black',
-                                               'z-index': '1000000', 'backgroundColor': 'rgba(0,0,0,0)',
-                                               'border': 'none', 'border-radius': '0', 'font-size': '16px'})
+                                        clearable=False, searchable=False,
+                                        className='dropdown-admin-logged-in')
 
 app.layout = html.Div(
     [
@@ -93,7 +82,7 @@ app.layout = html.Div(
 
         dcc.Store(id='session-username', data = {'username': user_profile.username,
                                                  'is_authorized': user_profile.is_authorized},
-                                         storage_type='memory'),
+                                         storage_type='session'),
         
         dbc.Modal(
             [
