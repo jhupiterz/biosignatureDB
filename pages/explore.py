@@ -65,7 +65,7 @@ def render_tab_content(tab_value):
                 html.Div([
                     html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-2vh', 'margin-left': '4vw', 'order': '1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                     html.Div(id = 'mars-map', children = [],
-                            style = {'width': '40vw', 'height': '30vh', 'order': '2', 'margin-top': '-12vh', 'margin-left': '2vw'})],
+                            style = {'width': '30vw', 'height': '25vh', 'order': '2', 'margin-left': '2vw', 'margin-top': '3vh'})],
                 style = {'order':'1','display':'flex', 'flex-direction': 'column', 'align-items': 'center','margin-top': '0vh', 'height': '25vh'}),
                 html.Div([
                     html.H3('Data preview', style = {'color': 'black', 'text-align': 'center', 'order':'1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
@@ -196,12 +196,12 @@ def generate_mars_map(hoverData, data):
         location = hoverData['points'][0]['hovertext']
         mars_location = df[df['location_name'] == location]['mars_counterpart_1'][0]
         if mars_location == 'Columbia Hills, Mars':
-            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '30vw', 'height': '20vh'})
+            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
         elif mars_location == 'Eberswalde delta, Mars':
-            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '30vw', 'height': '20vh'})
+            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
         elif mars_location == 'Meridiani Planum, Mars':
-            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '30vw', 'height': '20vh'})
-    return html.Img(src='/assets/mars_map.png', style = {'width': '30vw', 'height': '20vh'})
+            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
+    return html.Img(src='/assets/mars_map.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
 
 @callback(
     Output("data-preview", "data"),
