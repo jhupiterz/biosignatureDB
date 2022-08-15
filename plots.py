@@ -6,8 +6,8 @@ def plot_interactive_map(df, projection):
                         color = 'max_age',
                         color_continuous_scale= px.colors.sequential.Viridis,
                         hover_name='location_name',
-                        width= 600,
-                        height= 600,
+                        width= 500,
+                        height= 500,
                         projection=projection)
     fig.update_layout(
                         showlegend=False,
