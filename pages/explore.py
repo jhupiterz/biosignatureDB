@@ -48,9 +48,9 @@ def render_tab_content(tab_value):
                                             value = 'mercator', inline= False, style = {'order': '2', 'color': 'black'})
                                 ], className = 'projection-selector')], className= 'div-projection'),
                             html.Div([
-                                html.H3('(Paleo)environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '8px', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
+                                html.H3('(Paleo)environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '1vh', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                                 html.Div(id = 'paleoenv-filter', children = [], style = {'order': '2', 'z-index': '10', 'position': 'absolute'})
-                            ], style = {'margin-top': '-10px'}),
+                            ], style = {'margin-top': '-1vh'}),
                             html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
                             style = {'order': '1', 'margin-left': '0vw', 'margin-top': '2vh'}),
                     
@@ -63,7 +63,7 @@ def render_tab_content(tab_value):
             
             html.Div([
                 html.Div([
-                    html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-40px', 'margin-left': '4vw', 'order': '1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
+                    html.H3('Mars counterpart(s)', style = {'color': 'black', 'text-align': 'center', 'margin-bottom': '-2vh', 'margin-left': '4vw', 'order': '1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                     html.Div(id = 'mars-map', children = [],
                             style = {'width': '40vw', 'height': '30vh', 'order': '2', 'margin-top': '-12vh', 'margin-left': '2vw'})],
                 style = {'order':'1','display':'flex', 'flex-direction': 'column', 'align-items': 'center','margin-top': '0vh', 'height': '25vh'}),
@@ -196,12 +196,12 @@ def generate_mars_map(hoverData, data):
         location = hoverData['points'][0]['hovertext']
         mars_location = df[df['location_name'] == location]['mars_counterpart_1'][0]
         if mars_location == 'Columbia Hills, Mars':
-            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '600px', 'height': '500px'})
+            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '15vw', 'height': '10vh'})
         elif mars_location == 'Eberswalde delta, Mars':
-            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '600px', 'height': '500px'})
+            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '15vw', 'height': '10vh'})
         elif mars_location == 'Meridiani Planum, Mars':
-            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '600px', 'height': '500px'})
-    return html.Img(src='/assets/mars_map.png', style = {'width': '600px', 'height': '500px'})
+            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '15vw', 'height': '10vh'})
+    return html.Img(src='/assets/mars_map.png', style = {'width': '15vw', 'height': '10vh'})
 
 @callback(
     Output("data-preview", "data"),
