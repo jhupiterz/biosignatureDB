@@ -31,7 +31,6 @@ termcolor
 # dash
 dash
 dash_bootstrap_components
-biosignature_db
 json
 plotly.express
 
