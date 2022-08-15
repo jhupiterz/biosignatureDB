@@ -11,6 +11,7 @@ app = dash.Dash(
     use_pages=True,
     meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1", 'charSet':'“UTF-8”'}])
 
+server = app.server
 app.title = "biosignature database"
 
 admin_username_input = dbc.Col(
