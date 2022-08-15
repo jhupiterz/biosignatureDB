@@ -27,3 +27,11 @@ six>=1.14
 joblib
 memoized-property
 termcolor
+
+# dash
+dash
+dash_bootstrap_components
+biosignature_db
+json
+plotly.express
+
