@@ -2,7 +2,7 @@ import pandas as pd
 import dash
 from dash import html, callback, dcc, Input, Output
 import dash_bootstrap_components as dbc
-from biosignature_db import data
+import data
 
 dash.register_page(__name__, path='/submit')
 

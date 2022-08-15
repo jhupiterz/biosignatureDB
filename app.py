@@ -1,7 +1,7 @@
 import dash
 from dash import html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
-from biosignature_db import user_profile
+import user_profile
 
 user_profile = user_profile.UserProfile()
 

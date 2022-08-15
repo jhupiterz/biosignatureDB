@@ -2,8 +2,8 @@ import pandas as pd
 import dash
 from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
-from biosignature_db import plots
-from biosignature_db import data
+import plots
+import data
 
 dash.register_page(__name__, path='/')
 
