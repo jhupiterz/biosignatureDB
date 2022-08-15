@@ -196,12 +196,12 @@ def generate_mars_map(hoverData, data):
         location = hoverData['points'][0]['hovertext']
         mars_location = df[df['location_name'] == location]['mars_counterpart_1'][0]
         if mars_location == 'Columbia Hills, Mars':
-            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '15vw', 'height': '10vh'})
+            return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '30vw', 'height': '20vh'})
         elif mars_location == 'Eberswalde delta, Mars':
-            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '15vw', 'height': '10vh'})
+            return html.Img(src='/assets/mars_map_eberswalde.png', style = {'width': '30vw', 'height': '20vh'})
         elif mars_location == 'Meridiani Planum, Mars':
-            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '15vw', 'height': '10vh'})
-    return html.Img(src='/assets/mars_map.png', style = {'width': '15vw', 'height': '10vh'})
+            return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '30vw', 'height': '20vh'})
+    return html.Img(src='/assets/mars_map.png', style = {'width': '30vw', 'height': '20vh'})
 
 @callback(
     Output("data-preview", "data"),
