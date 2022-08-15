@@ -1,7 +1,3 @@
-from folium import Marker
-from matplotlib import projections
-from matplotlib.pyplot import margins, title
-import plotly.graph_objects as go
 import plotly.express as px
 
 def plot_interactive_map(df, projection):
