@@ -1,5 +1,7 @@
+import os
+
 VALID_USERNAME_PASSWORD_PAIRS = {
-    'admin': 'admin'
+    os.environ.get('USERNAME'): os.environ.get('PASSWORD')
 }
 
 class UserProfile():
