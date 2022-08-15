@@ -16,12 +16,6 @@ flake8
 pytest
 yapf
 
-# API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
-
 # utilities
 six>=1.14
 joblib
@@ -31,6 +25,5 @@ termcolor
 # dash
 dash
 dash_bootstrap_components
-json
 plotly.express
 
