@@ -3,6 +3,8 @@ from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 import user_profile
 
+# Need to connect to Postgresql database from Heroku!
+
 user_profile = user_profile.UserProfile()
 
 app = dash.Dash(
