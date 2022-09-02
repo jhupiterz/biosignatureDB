@@ -1,8 +1,7 @@
 import pandas as pd
 import dash
-from dash import html, callback, dcc, Input, Output
+from dash import html, callback, Input, Output
 import dash_bootstrap_components as dbc
-import data
 
 dash.register_page(__name__, path='/submit')
 

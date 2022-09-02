@@ -1,7 +1,5 @@
 import pandas as pd
 import dash
-import os
-import psycopg2
 from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
 import plots
@@ -9,25 +7,9 @@ import data
 
 dash.register_page(__name__, path='/')
 
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-conn.autocommit = True
-cursor = conn.cursor()
-cursor.execute('''SELECT *''')
-
-result = cursor.fetchall()
-bio_df = pd.DataFrame(result)
+biosignature_json = data.read_json_data('data/biosignature.json')
+bio_df = pd.DataFrame(biosignature_json)
 bio_df = bio_df[bio_df['status'] == ' 🟢 validated']
-print(bio_df)
-
-#conn.commit()
-
-#conn.close()
-
-# biosignature_json = data.read_json_data('data/biosignature.json')
-# bio_df = pd.DataFrame(biosignature_json)
-# bio_df = bio_df[bio_df['status'] == ' 🟢 validated']
 
 layout = html.Div(children=[
     #dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type = 'memory'),
