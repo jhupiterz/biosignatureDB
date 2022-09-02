@@ -3,8 +3,6 @@ from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 import user_profile
 
-# Need to connect to Postgresql database from Heroku!
-
 user_profile = user_profile.UserProfile()
 
 app = dash.Dash(
@@ -76,7 +74,7 @@ app.layout = html.Div(
                 html.Div([
                     html.A('Explore', href='/', className="menu-link",  style = {'order': '1', 'margin-right': '2vw'}),
                     html.A('Submit new data', href='/submit', className="menu-link", style = {'order': '2', 'margin-right': '2vw'}),
-                    html.A('Documentation', href='https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', className="menu-link", style = {'order': '3', 'margin-right': '2vw'}),
+                    html.A('Documentation', href='https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', target= "_blank", className="menu-link", style = {'order': '3', 'margin-right': '2vw'}),
                     html.Div(id='login-dropdown', style={'order': '4'})
                 ], className = "menu"),
             ],

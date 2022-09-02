@@ -357,7 +357,6 @@ coord2_input = dbc.Row(
 )
 
 layout = html.Div(children=[
-    dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type = 'memory'),
     html.H1(children="You're about to submit new data!", style = {'color': 'black'}),
     html.Div([
         html.P(children=["👏 Thank you for willing to contribute to the biosignature database.",
