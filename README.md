@@ -9,7 +9,7 @@ The web app prototype has recently been deployed on Heroku an dcan be accessed [
 
 # 🖥️ App preview
 
-![App preview](biosignatureDB.gif)
+![App preview](bioDB.gif)
 
 # ⚙️ Install 
 
