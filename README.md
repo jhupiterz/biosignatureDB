@@ -7,6 +7,8 @@ The web app prototype has recently been deployed on Heroku an dcan be accessed [
 ➡️ Full documentation: [Here](https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436)<br>
 ➡️ App link: [here](https://biosignature-database.herokuapp.com/)
 
+# 🖥️ App preview
+
 ![App preview](biosignatureDB.gif)
 
 # ⚙️ Install 
