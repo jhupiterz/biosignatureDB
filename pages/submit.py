@@ -1,9 +1,17 @@
-import pandas as pd
+import os
+import psycopg2
 import dash
 from dash import html, callback, Input, Output
 import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, path='/submit')
+
+DATABASE_CREDENTIALS = {
+    "HOST": os.environ.get('HOST'),
+    "DATABASE": os.environ.get('DATABASE'),
+    "USER": os.environ.get('USER'),
+    "DB_PASSWORD": os.environ.get('DB_PASSWORD')
+}
 
 # Make sure entered ID is unique and follows the pattern
 bio_id_input = dbc.Row(
@@ -381,6 +389,21 @@ layout = html.Div(children=[
 
     ])
 
+def write_data_to_be_validated(bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype, n_samples, min_age, max_age, env_conditions, paleo, location, lat, lon, mars1, lat1, lon1, pub_ref, pub_url, status):
+    conn = psycopg2.connect(
+        host=DATABASE_CREDENTIALS['HOST'],
+        database=DATABASE_CREDENTIALS['DATABASE'],
+        user=DATABASE_CREDENTIALS['USER'],
+        password=DATABASE_CREDENTIALS['DB_PASSWORD'])
+    cur = conn.cursor()
+    query = """INSERT INTO biosignature
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    cur.execute(query, (bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype, n_samples, min_age, max_age, env_conditions, paleo, location, lat, lon, mars1, lat1, lon1, pub_ref, pub_url, status))
+    conn.commit()
+    print(cur.rowcount, "Record inserted successfully into table")
+    cur.close()
+    conn.close()
+
 @callback(Output('submit-output', 'children'),
           Input('bio-id-row', 'value'),
           Input('bio-cat-row', 'value'),
@@ -390,34 +413,24 @@ layout = html.Div(children=[
           Input('methods-row', 'value'),
           Input('sample-type-row', 'value'),
           Input('sample-subtype-row', 'value'),
+          Input('n-samples-row', 'value'),
           Input('min-age-row', 'value'),
           Input('max-age-row', 'value'),
-          Input('pub-url-row', 'value'),
-          Input('paleo-row', 'value'),
-          Input('n-samples-row', 'value'),
           Input('env-row', 'value'),
+          Input('paleo-row', 'value'),
           Input('location-row', 'value'),
           Input('lat-row', 'value'),
           Input('lon-row', 'value'),
           Input('mars1-row', 'value'),
           Input('lat1-row', 'value'),
           Input('lon1-row', 'value'),
-          Input('mars2-row', 'value'),
-          Input('lat2-row', 'value'),
-          Input('lon2-row', 'value'),
           Input('pub-ref-row', 'value'),
-          Input('pub-year-row', 'value'),
-          Input('store-biosignature', 'data'), 
+          Input('pub-url-row', 'value'),
           Input('submit-data', 'n_clicks'))
-def send_data_to_validation(bio_id, bio_cat, bio_subcat, name, indicative,
-                            methods, sample_type, sample_subtype, min_age, max_age,
-                            pub_url, paleo, n_samples, env, location, lat, lon, mars1,
-                            lat1, lon1, mars2, lat2, lon2, pub_ref, pub_year, data, n_clicks):
+def send_data_to_validation(bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype, n_samples, min_age, max_age, env_conditions, paleo, location, lat, lon, mars1, lat1, lon1, pub_ref, pub_url, n_clicks):
     if n_clicks > 0:
-        df = pd.DataFrame(data)
+        print(bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype, n_samples, min_age, max_age, env_conditions, paleo, location, lat, lon, mars1, lat1, lon1, pub_ref, pub_url, n_clicks)
         data_status = '🟠 pending'
-        df.loc[len(df.index)] = [bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype,
-                                n_samples, min_age, max_age, env, paleo, location, lat, lon, mars1, lat1, lon1, mars2, lat2, lon2, pub_ref, pub_year, pub_url, data_status]
-        df.to_json('data/biosignature.json', orient='records')
+        write_data_to_be_validated(bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype, n_samples, min_age, max_age, env_conditions, paleo, location, lat, lon, mars1, lat1, lon1, pub_ref, pub_url, data_status)
         n_clicks = 0
         return " ✅ Your data has been submitted and will shortly be validated"

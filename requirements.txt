@@ -28,4 +28,5 @@ dash_bootstrap_components
 plotly.express
 gunicorn
 uvicorn
+psycopg2
 

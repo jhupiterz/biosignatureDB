@@ -1,4 +1,6 @@
 import pandas as pd
+import psycopg2
+import os
 import dash
 from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -7,14 +9,51 @@ import data
 
 dash.register_page(__name__, path='/')
 
+DATABASE_CREDENTIALS = {
+    "HOST": os.environ.get('HOST'),
+    "DATABASE": os.environ.get('DATABASE'),
+    "USER": os.environ.get('USER'),
+    "DB_PASSWORD": os.environ.get('DB_PASSWORD')
+}
+
 biosignature_json = data.read_json_data('data/biosignature.json')
 bio_df = pd.DataFrame(biosignature_json)
 bio_df = bio_df[bio_df['status'] == ' 🟢 validated']
 
+
+conn = psycopg2.connect(
+    host=DATABASE_CREDENTIALS['HOST'],
+    database=DATABASE_CREDENTIALS['DATABASE'],
+    user=DATABASE_CREDENTIALS['USER'],
+    password=DATABASE_CREDENTIALS['DB_PASSWORD'])
+cur = conn.cursor()
+cur.execute('SELECT * FROM biosignature')
+results = cur.fetchall()
+column_names = ['biosignature_id', 'biosignature_cat', 'biosignature_subcat',
+                'biosignature_name', 'indicative_of', 'detection_methods',
+                'sample_type', 'sample_subtype', 'number_of_samples', 'min_age',
+                'max_age', 'env_conditions', 'paleoenvironment', 'location_name',
+                'latitude', 'longitude', 'mars_counterpart', 'mars_latitude',
+                'mars_longitude', 'pub_ref', 'pub_url', 'status']
+df = pd.DataFrame(results, columns=column_names)
+cur.close()
+conn.close()
+
+def generate_data_preview(df):
+    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
+
+def generate_data_to_validate(df):
+    df = df[df['status'] == '🟠 pending']
+    return df.to_dict('records'), [{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
+
+def create_dropdown(df):
+    df = df[df['status'] == ' 🟢 validated']
+    options = df['paleoenvironment'].unique().tolist()
+    options = ['All'] + options
+    return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All', clearable= False,
+                        placeholder = 'Paleoenvironment', style = {'color': 'black', 'width': '26vw'})
+
 layout = html.Div(children=[
-    #dcc.Store(id='store-biosignature', data = data.read_json_data('data/biosignature.json'), storage_type = 'memory'),
-    dcc.Store(id='store-biosignature', data = bio_df.to_dict(), storage_type = 'session'),
-        
         dbc.Card(
             [
                 dbc.CardHeader(
@@ -50,7 +89,7 @@ def render_tab_content(tab_value):
                                 ], className = 'projection-selector')], className= 'div-projection'),
                             html.Div([
                                 html.H3('(Paleo)environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '1vh', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
-                                html.Div(id = 'paleoenv-filter', children = [], style = {'order': '2', 'z-index': '10', 'position': 'absolute'})
+                                html.Div(id = 'paleoenv-filter', children = [create_dropdown(df)], style = {'order': '2', 'z-index': '10', 'position': 'absolute'})
                             ], style = {'margin-top': '-1vh'}),
                             html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
                             style = {'order': '1', 'margin-left': '0vw', 'margin-top': '2vh'}),
@@ -71,7 +110,8 @@ def render_tab_content(tab_value):
                 html.Div([
                     html.H3('Data preview', style = {'color': 'black', 'text-align': 'center', 'order':'1', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                     html.Div([
-                        dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                        dash_table.DataTable(id = 'data-preview', data = generate_data_preview(df)[0], columns= generate_data_preview(df)[1],
+                                            css = generate_data_preview(df)[2] ,editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                             style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                             style_cell = {'textAlign': 'left', 'padding': '0px'},
                                             style_table = {'width':'30vw', 'height':'37.5vh', 'overflow': 'auto'},
@@ -104,7 +144,8 @@ def render_tab_content(tab_value):
                         html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw'}),    
                             
                     ], style={'width': '95vw', 'margin': 'auto', 'margin-top': '1vh', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between'}),
-                    dash_table.DataTable(id = 'data-preview', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                    dash_table.DataTable(id = 'data-preview', data = generate_data_preview(df)[0], columns= generate_data_preview(df)[1],
+                                css = generate_data_preview(df)[2], editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                 style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                 style_cell = {'textAlign': 'left', 'padding': '0px'},
                                 style_table = {'height':'65vh', 'width':'95vw', 'overflow': 'auto', 'margin': 'auto', 'margin-bottom': '2vh'},
@@ -126,28 +167,24 @@ def render_tab_content(tab_value):
 
 @callback(
     Output('interactive-map', 'children'),
-    Input('store-biosignature', 'data'),
     Input('projection-selector', 'value'),
     Input('paleoenv-value', 'value'))
-def create_interactive_map(data, projection, value_paleo):
-    df = pd.DataFrame(data)
-    df = df[df['status'] == ' 🟢 validated']
+def create_interactive_map(projection, value_paleo):
+    df_ = df[df['status'] == ' 🟢 validated']
     if value_paleo == 'All':
-        df = df.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
+        df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number_of_samples', 'max_age']]
     elif value_paleo != 'All':
-        df = df[df['paleoenvironment'] == value_paleo]
-        df = df.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
+        df_ = df_[df_['paleoenvironment'] == value_paleo]
+        df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number_of_samples', 'max_age']]
     return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df, projection), className = 'map-style', config= {'displayModeBar': False})
 
 @callback(
     Output('hover-bar-chart', 'children'),
-    Input('map', 'hoverData'),
-    Input('store-biosignature', 'data')
+    Input('map', 'hoverData')
 )
-def create_bar_chart(hoverData, data):
-    df = pd.DataFrame(data)
-    df = df[df['status'] == ' 🟢 validated']
-    grouped_df = grouped_df = df.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat', 'biosignature_subcat']).sum()[['number of samples' ]]
+def create_bar_chart(hoverData):
+    df_ = df[df['status'] == ' 🟢 validated']
+    grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat', 'biosignature_subcat']).sum()[['number_of_samples' ]]
     grouped_df.reset_index(level=['biosignature_cat', 'biosignature_subcat'], inplace=True)
     if hoverData:
         loc = hoverData['points'][0]['hovertext']
@@ -160,13 +197,11 @@ def create_bar_chart(hoverData, data):
 
 @callback(
     Output('hover-pie-chart', 'children'),
-    Input('map', 'hoverData'),
-    Input('store-biosignature', 'data')
+    Input('map', 'hoverData')
 )
-def create_pie_chart(hoverData, data):
-    df = pd.DataFrame(data)
-    df = df[df['status'] == ' 🟢 validated']
-    grouped_df = df.groupby(['latitude', 'longitude', 'location_name', 'detection_methods']).sum()[['number of samples' ]]
+def create_pie_chart(hoverData):
+    df_ = df[df['status'] == ' 🟢 validated']
+    grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'detection_methods']).sum()[['number_of_samples' ]]
     grouped_df.reset_index(level=['detection_methods'], inplace=True)
     if hoverData:
         loc = hoverData['points'][0]['hovertext']
@@ -176,26 +211,13 @@ def create_pie_chart(hoverData, data):
         return dcc.Graph(figure=fig)
 
 @callback(
-    Output('paleoenv-filter', 'children'),
-    Input('store-biosignature', 'data'))
-def create_dropdown(data):
-    df = pd.DataFrame(data)
-    df = df[df['status'] == ' 🟢 validated']
-    options = df['paleoenvironment'].unique().tolist()
-    options = ['All'] + options
-    return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All', clearable= False,
-                        placeholder = 'Paleoenvironment', style = {'color': 'black', 'width': '26vw'})
-
-@callback(
     Output('mars-map', 'children'),
-    Input('map', 'hoverData'),
-    Input('store-biosignature', 'data'))
-def generate_mars_map(hoverData, data):
-    df = pd.DataFrame(data)
-    df = df[df['status'] == ' 🟢 validated']
+    Input('map', 'hoverData'))
+def generate_mars_map(hoverData):
+    df_ = df[df['status'] == ' 🟢 validated']
     if hoverData:
         location = hoverData['points'][0]['hovertext']
-        mars_location = df[df['location_name'] == location]['mars_counterpart_1'][0]
+        mars_location = df_[df_['location_name'] == location]['mars_counterpart_1'][0]
         if mars_location == 'Columbia Hills, Mars':
             return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
         elif mars_location == 'Eberswalde delta, Mars':
@@ -203,18 +225,6 @@ def generate_mars_map(hoverData, data):
         elif mars_location == 'Meridiani Planum, Mars':
             return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
     return html.Img(src='/assets/mars_map.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
-
-@callback(
-    Output("data-preview", "data"),
-    Output("data-preview", "columns"),
-    Output("data-preview", "css"),
-    Input("store-biosignature", "data")
-)
-def generate_datatable(data):
-    df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
-                             'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
-                             'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
-    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
 
 @callback(
     Output("download-csv", "data"),
@@ -235,33 +245,6 @@ def toggle_modal(n_clicks, is_open):
     if n_clicks > 0:
         return not is_open
     return is_open
-
-@callback(
-    Output("data-to-validate", "data"),
-    Output("data-to-validate", "columns"),
-    Output("data-to-validate", "css"),
-    Input("store-biosignature", "data")
-)
-def generate_datatable(data):
-    df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
-                             'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
-                             'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
-    df = df[df['status'] == '🟠 pending']
-    return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
-
-# @callback(
-#     Output("data-to-edit", "data"),
-#     Output("data-to-edit", "columns"),
-#     Output("data-to-edit", "css"),
-#     Input("store-biosignature", "data")
-# )
-# def generate_datatable(data):
-#     df = pd.DataFrame(data)[['biosignature_id', 'biosignature_cat', 'biosignature_subcat', 'name',
-#                              'indicative_of', 'detection_methods', 'sample_type', 'number of samples',
-#                              'min_age', 'max_age', 'pub_url', 'paleoenvironment', 'status']]
-#     df = df[df['status'] == ' 🟢 validated']
-#     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-row="1"][data-dash-column="pub_url"] table', rule='color: blue;')]
-
 
 @callback(
     Output("data-tab-buttons", "children"),
@@ -287,7 +270,8 @@ def generate_tab_buttons(data):
                             [
                                 dbc.ModalHeader(dbc.ModalTitle("What data do you wish to validate?"), style={'margin': 'auto'}),
                                 dbc.ModalBody(children=[
-                                    dash_table.DataTable(id='data-to-validate', editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
+                                    dash_table.DataTable(id='data-to-validate', columns = generate_data_to_validate(df)[1], data = generate_data_to_validate(df)[0], css = generate_data_to_validate(df)[2],
+                                                         editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                                          row_selectable = True,
                                                          selected_rows = [],
                                                          style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
@@ -307,55 +291,7 @@ def generate_tab_buttons(data):
                                             href="/submit",
                                             className="doc-link-download",
                                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
-                                        ),
-                        # html.Button(
-                        #     "Edit database",
-                        #      className="doc-link-download",
-                        #      style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1vw'},
-                        #      id = "btn-edit-data",
-                        #      n_clicks= 0
-                        # ),
-                        # dbc.Modal(
-                        #     [
-                        #         dbc.ModalHeader(dbc.ModalTitle("Do you wish to"), style={'margin': 'auto'}),
-                        #         dbc.ModalBody(children=[
-                        #             html.Div([
-                        #                 html.Button(
-                        #                     'Edit existing data',
-                        #                     className="doc-link-download",
-                        #                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
-                        #                     id='edit-data-btn',
-                        #                     n_clicks= 0),
-                        #                 dbc.Modal(
-                        #                     [
-                        #                         dbc.ModalHeader(dbc.ModalTitle("What data do you wish to edit?"), style={'margin': 'auto'}),
-                        #                         dbc.ModalBody(children=[
-                        #                             dash_table.DataTable(id='data-to-edit', editable = True, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
-                        #                                                 style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
-                        #                                                 style_cell = {'textAlign': 'left', 'padding': '0px'},
-                        #                                                 style_table = {'order':'1', 'height':'30vh', 'width':'65vw', 'overflow': 'auto', 'margin': 'auto', 'margin-top': '3vh'}),
-                        #                             html.Div(id='edit-data-modal-body', children = [], style = {'order':'2', 'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                        #                         ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                        #                     ],
-                        #                     id="edit-pop-up-content",
-                        #                     size="xl",
-                        #                     style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
-                        #                     is_open=False,
-                        #                 ),
-                        #                 html.A(
-                        #                     "Submit new data", 
-                        #                     href="/submit",
-                        #                     className="doc-link-download",
-                        #                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
-                        #                 )],
-                        #                 style = {'display':'flex', 'flex-direction': 'row', 'align-items': 'center'})
-                        #         ], style = {'display':'flex', 'flex-direction': 'column', 'align-items': 'center'}),
-                        #     ],
-                        #     id="edit-pop-up",
-                        #     size="lg",
-                        #     style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
-                        #     is_open=False,
-                        # ),
+                                        )
                 ]
     elif data['username'] == 'user':
         return [html.Button(
@@ -399,31 +335,15 @@ def generate_modal_mody(data_to_validate):
                 html.P(id='validate-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
     return "No pending data to validate"
 
-# @callback(
-#     Output('edit-data-modal-body', 'children'),
-#     Input('data-to-edit', 'data'))
-# def generate_modal_mody(data_to_validate):
-#     if data_to_validate:
-#         return [html.Button(
-#                     "Submit edits",
-#                     className="doc-link-validate",
-#                     style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-top': '3vh'},
-#                     id = "btn-edit-data-modal",
-#                     n_clicks= 0),
-#                 html.P(id='edit-output', style={'order': '2', 'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '20px', 'text-align': 'center', 'margin-top': '3vh'})]
-#     return "No pending data to edit"
-
 @callback(
     Output('validate-output', 'children'),
     Input('data-to-validate', 'data'),
-    Input('store-biosignature', 'data'),
     Input('data-to-validate', 'selected_rows'),
     Input("btn-validate-data-modal", "n_clicks"),
     prevent_initial_call=True,
 )
-def func(data_to_validate, data, selected_rows, n_clicks):
+def func(data_to_validate, selected_rows, n_clicks):
     if n_clicks > 0:
-        df = pd.DataFrame(data)
         df_to_validate = pd.DataFrame(data_to_validate)
         df_selected = df_to_validate.iloc[selected_rows]
         for index, row in df.iterrows():
@@ -433,14 +353,6 @@ def func(data_to_validate, data, selected_rows, n_clicks):
         df.to_csv('../raw_data/biosignature.csv', index=False)
         df.to_json('data/biosignature.json', orient='records')
         return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
-
-# @callback(
-#     Output('edit-pop-up', 'is_open'),
-#     Input('btn-edit-data', 'n_clicks'),
-# )
-# def generate_pop_up(n_clicks):
-#     if n_clicks > 0:
-#         return True
 
 @callback(
     Output('edit-pop-up-content', 'is_open'),
