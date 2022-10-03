@@ -400,7 +400,6 @@ def write_data_to_be_validated(bio_id, bio_cat, bio_subcat, name, indicative, me
                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     cur.execute(query, (bio_id, bio_cat, bio_subcat, name, indicative, methods, sample_type, sample_subtype, n_samples, min_age, max_age, env_conditions, paleo, location, lat, lon, mars1, lat1, lon1, pub_ref, pub_url, status))
     conn.commit()
-    print(cur.rowcount, "Record inserted successfully into table")
     cur.close()
     conn.close()
 
