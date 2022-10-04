@@ -5,7 +5,6 @@ import dash
 from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
 import plots
-import data
 
 dash.register_page(__name__, path='/')
 
@@ -15,11 +14,6 @@ DATABASE_CREDENTIALS = {
     "USER": os.environ.get('USER'),
     "DB_PASSWORD": os.environ.get('DB_PASSWORD')
 }
-
-biosignature_json = data.read_json_data('data/biosignature.json')
-bio_df = pd.DataFrame(biosignature_json)
-bio_df = bio_df[bio_df['status'] == ' 🟢 validated']
-
 
 conn = psycopg2.connect(
     host=DATABASE_CREDENTIALS['HOST'],
@@ -36,8 +30,6 @@ column_names = ['biosignature_id', 'biosignature_cat', 'biosignature_subcat',
                 'latitude', 'longitude', 'mars_counterpart', 'mars_latitude',
                 'mars_longitude', 'pub_ref', 'pub_url', 'status']
 df = pd.DataFrame(results, columns=column_names)
-cur.close()
-conn.close()
 
 def generate_data_preview(df):
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
@@ -361,3 +353,6 @@ def func(data_to_validate, selected_rows, n_clicks):
 def generate_pop_up(n_clicks):
     if n_clicks > 0:
         return True
+
+cur.close()
+conn.close()
