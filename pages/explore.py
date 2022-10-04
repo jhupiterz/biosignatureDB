@@ -1,6 +1,4 @@
 import pandas as pd
-import psycopg2
-import os
 import dash
 from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
@@ -191,10 +189,8 @@ def generate_mars_map(hoverData):
     df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if hoverData:
-        print(hoverData)
         location = hoverData['points'][0]['hovertext']
-        mars_location = df_[df_['location_name'] == location]['mars_counterpart_1'][0]
-        print(mars_location)
+        mars_location = df_[df_['location_name'] == location]['mars_counterpart'][0]
         if mars_location == 'Columbia Hills, Mars':
             return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
         elif mars_location == 'Eberswalde delta, Mars':
