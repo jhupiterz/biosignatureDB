@@ -113,7 +113,7 @@ def render_tab_content(tab_value):
                         html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw'}),    
                             
                     ], style={'width': '95vw', 'margin': 'auto', 'margin-top': '1vh', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between'}),
-                    dash_table.DataTable(id = 'data-preview', data = generate_data_preview(df)[0], columns= generate_data_preview(df)[1],
+                    dash_table.DataTable(id = 'data-preview', data = generate_data_preview(df)[0], columns= generate_data_preview(df)[1], export_format = 'csv',
                                 css = generate_data_preview(df)[2], editable = False, style_data = {'color': 'black', 'font-family': 'Arial, sans serif'},
                                 style_header= {'color': 'black', 'font-weight': 'bold', 'background-color': 'rgba(5, 8, 184, 0.4)', 'textAlign': 'left', 'font-family': 'Arial, sans serif'},
                                 style_cell = {'textAlign': 'left', 'padding': '0px'},
