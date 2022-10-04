@@ -9,29 +9,6 @@ import data
 
 dash.register_page(__name__, path='/')
 
-# DATABASE_CREDENTIALS = {
-#     "HOST": os.environ.get('HOST'),
-#     "DATABASE": os.environ.get('DATABASE'),
-#     "USER": os.environ.get('USER'),
-#     "DB_PASSWORD": os.environ.get('DB_PASSWORD')
-# }
-
-# conn = psycopg2.connect(
-#     host=DATABASE_CREDENTIALS['HOST'],
-#     database=DATABASE_CREDENTIALS['DATABASE'],
-#     user=DATABASE_CREDENTIALS['USER'],
-#     password=DATABASE_CREDENTIALS['DB_PASSWORD'])
-# cur = conn.cursor()
-# cur.execute('SELECT * FROM biosignature')
-# results = cur.fetchall()
-# column_names = ['biosignature_id', 'biosignature_cat', 'biosignature_subcat',
-#                 'biosignature_name', 'indicative_of', 'detection_methods',
-#                 'sample_type', 'sample_subtype', 'number_of_samples', 'min_age',
-#                 'max_age', 'env_conditions', 'paleoenvironment', 'location_name',
-#                 'latitude', 'longitude', 'mars_counterpart', 'mars_latitude',
-#                 'mars_longitude', 'pub_ref', 'pub_url', 'status']
-# df = pd.DataFrame(results, columns=column_names)
-
 def generate_data_preview(df):
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
 
@@ -214,8 +191,10 @@ def generate_mars_map(hoverData):
     df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if hoverData:
+        print(hoverData)
         location = hoverData['points'][0]['hovertext']
         mars_location = df_[df_['location_name'] == location]['mars_counterpart_1'][0]
+        print(mars_location)
         if mars_location == 'Columbia Hills, Mars':
             return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
         elif mars_location == 'Eberswalde delta, Mars':
