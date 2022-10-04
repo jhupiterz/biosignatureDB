@@ -1,4 +1,32 @@
 import json
+import os
+import pandas as pd
+import psycopg2
+
+DATABASE_CREDENTIALS = {
+    "HOST": os.environ.get('HOST'),
+    "DATABASE": os.environ.get('DATABASE'),
+    "USER": os.environ.get('USER'),
+    "DB_PASSWORD": os.environ.get('DB_PASSWORD')
+}
+
+def read_database():
+    conn = psycopg2.connect(
+    host=DATABASE_CREDENTIALS['HOST'],
+    database=DATABASE_CREDENTIALS['DATABASE'],
+    user=DATABASE_CREDENTIALS['USER'],
+    password=DATABASE_CREDENTIALS['DB_PASSWORD'])
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM biosignature')
+    results = cur.fetchall()
+    column_names = ['biosignature_id', 'biosignature_cat', 'biosignature_subcat',
+                    'biosignature_name', 'indicative_of', 'detection_methods',
+                    'sample_type', 'sample_subtype', 'number_of_samples', 'min_age',
+                    'max_age', 'env_conditions', 'paleoenvironment', 'location_name',
+                    'latitude', 'longitude', 'mars_counterpart', 'mars_latitude',
+                    'mars_longitude', 'pub_ref', 'pub_url', 'status']
+    df = pd.DataFrame(results, columns=column_names)
+    return df
 
 def read_json_data(json_file):
     with open(json_file, 'r') as myfile:

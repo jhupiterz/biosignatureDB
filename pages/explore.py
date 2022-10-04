@@ -5,31 +5,32 @@ import dash
 from dash import html, dcc, callback, dash_table, Input, Output, State
 import dash_bootstrap_components as dbc
 import plots
+import data
 
 dash.register_page(__name__, path='/')
 
-DATABASE_CREDENTIALS = {
-    "HOST": os.environ.get('HOST'),
-    "DATABASE": os.environ.get('DATABASE'),
-    "USER": os.environ.get('USER'),
-    "DB_PASSWORD": os.environ.get('DB_PASSWORD')
-}
+# DATABASE_CREDENTIALS = {
+#     "HOST": os.environ.get('HOST'),
+#     "DATABASE": os.environ.get('DATABASE'),
+#     "USER": os.environ.get('USER'),
+#     "DB_PASSWORD": os.environ.get('DB_PASSWORD')
+# }
 
-conn = psycopg2.connect(
-    host=DATABASE_CREDENTIALS['HOST'],
-    database=DATABASE_CREDENTIALS['DATABASE'],
-    user=DATABASE_CREDENTIALS['USER'],
-    password=DATABASE_CREDENTIALS['DB_PASSWORD'])
-cur = conn.cursor()
-cur.execute('SELECT * FROM biosignature')
-results = cur.fetchall()
-column_names = ['biosignature_id', 'biosignature_cat', 'biosignature_subcat',
-                'biosignature_name', 'indicative_of', 'detection_methods',
-                'sample_type', 'sample_subtype', 'number_of_samples', 'min_age',
-                'max_age', 'env_conditions', 'paleoenvironment', 'location_name',
-                'latitude', 'longitude', 'mars_counterpart', 'mars_latitude',
-                'mars_longitude', 'pub_ref', 'pub_url', 'status']
-df = pd.DataFrame(results, columns=column_names)
+# conn = psycopg2.connect(
+#     host=DATABASE_CREDENTIALS['HOST'],
+#     database=DATABASE_CREDENTIALS['DATABASE'],
+#     user=DATABASE_CREDENTIALS['USER'],
+#     password=DATABASE_CREDENTIALS['DB_PASSWORD'])
+# cur = conn.cursor()
+# cur.execute('SELECT * FROM biosignature')
+# results = cur.fetchall()
+# column_names = ['biosignature_id', 'biosignature_cat', 'biosignature_subcat',
+#                 'biosignature_name', 'indicative_of', 'detection_methods',
+#                 'sample_type', 'sample_subtype', 'number_of_samples', 'min_age',
+#                 'max_age', 'env_conditions', 'paleoenvironment', 'location_name',
+#                 'latitude', 'longitude', 'mars_counterpart', 'mars_latitude',
+#                 'mars_longitude', 'pub_ref', 'pub_url', 'status']
+# df = pd.DataFrame(results, columns=column_names)
 
 def generate_data_preview(df):
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
@@ -67,6 +68,7 @@ layout = html.Div(children=[
 @callback(Output('card-content', 'children'),
           Input('card-tabs', 'active_tab'))
 def render_tab_content(tab_value):
+    df = data.read_database()
     if tab_value == 'dashboard':
         return html.Div([
             html.Div([
@@ -162,6 +164,7 @@ def render_tab_content(tab_value):
     Input('projection-selector', 'value'),
     Input('paleoenv-value', 'value'))
 def create_interactive_map(projection, value_paleo):
+    df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if value_paleo == 'All':
         df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number_of_samples', 'max_age']]
@@ -175,6 +178,7 @@ def create_interactive_map(projection, value_paleo):
     Input('map', 'hoverData')
 )
 def create_bar_chart(hoverData):
+    df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat', 'biosignature_subcat']).sum()[['number_of_samples' ]]
     grouped_df.reset_index(level=['biosignature_cat', 'biosignature_subcat'], inplace=True)
@@ -192,6 +196,7 @@ def create_bar_chart(hoverData):
     Input('map', 'hoverData')
 )
 def create_pie_chart(hoverData):
+    df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'detection_methods']).sum()[['number_of_samples' ]]
     grouped_df.reset_index(level=['detection_methods'], inplace=True)
@@ -206,6 +211,7 @@ def create_pie_chart(hoverData):
     Output('mars-map', 'children'),
     Input('map', 'hoverData'))
 def generate_mars_map(hoverData):
+    df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if hoverData:
         location = hoverData['points'][0]['hovertext']
@@ -218,14 +224,14 @@ def generate_mars_map(hoverData):
             return html.Img(src='/assets/mars_map_meridiani.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
     return html.Img(src='/assets/mars_map.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
 
-@callback(
-    Output("download-csv", "data"),
-    Input("btn-download-data", "n_clicks"),
-    prevent_initial_call=True,
-)
-def func(n_clicks):
-    if n_clicks > 0:
-        return dcc.send_data_frame(bio_df.to_csv, "biosignature_data.csv")
+# @callback(
+#     Output("download-csv", "data"),
+#     Input("btn-download-data", "n_clicks"),
+#     prevent_initial_call=True,
+# )
+# def func(n_clicks):
+#     if n_clicks > 0:
+#         return dcc.send_data_frame(bio_df.to_csv, "biosignature_data.csv")
 
 @callback(
     Output("validate-pop-up", "is_open"),
@@ -244,6 +250,7 @@ def toggle_modal(n_clicks, is_open):
 )
 def generate_tab_buttons(data):
     if data['is_authorized'] == True and data['username'] == 'admin':
+        df = data.read_database()
         return  [html.Button(
                              "Download data",
                              className="doc-link-download",
@@ -336,14 +343,15 @@ def generate_modal_mody(data_to_validate):
 )
 def func(data_to_validate, selected_rows, n_clicks):
     if n_clicks > 0:
+        df = data.read_database()
         df_to_validate = pd.DataFrame(data_to_validate)
         df_selected = df_to_validate.iloc[selected_rows]
         for index, row in df.iterrows():
             for index_, row_ in df_selected.iterrows():
                 if row['biosignature_id'] == row_['biosignature_id']:
                     df.loc[index, 'status'] = ' 🟢 validated'
-        df.to_csv('../raw_data/biosignature.csv', index=False)
-        df.to_json('data/biosignature.json', orient='records')
+        #df.to_csv('../raw_data/biosignature.csv', index=False)
+        #df.to_json('data/biosignature.json', orient='records')
         return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
 
 @callback(
@@ -353,6 +361,3 @@ def func(data_to_validate, selected_rows, n_clicks):
 def generate_pop_up(n_clicks):
     if n_clicks > 0:
         return True
-
-cur.close()
-conn.close()
