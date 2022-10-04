@@ -175,6 +175,29 @@
     color: #13070C;
   }
 
+  .export{
+    border: 1px solid black;
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-left: 86.5vw;
+    margin-top: -7vh;
+    margin-bottom: 2vh;
+    color: black;
+    width: 150px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .export:hover {
+    border: 1px solid #13070C;
+    background-color: #e3d1ff;
+    color: #13070C;
+  }
+  
   .doc-link-submit {
     order: 2;
     border: 1px solid #13070C;

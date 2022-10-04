@@ -226,13 +226,7 @@ def toggle_modal(n_clicks, is_open):
 def generate_tab_buttons(data):
     if data['is_authorized'] == True and data['username'] == 'admin':
         df = data.read_database()
-        return  [html.Button(
-                             "Download data",
-                             className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
-                             id = "btn-download-data",
-                             n_clicks= 0
-                        ),
+        return  [
                         html.Button(
                              "Validate data",
                              className="doc-link-download",
@@ -259,28 +253,22 @@ def generate_tab_buttons(data):
                             style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
                             is_open=False,
                         ),
-                        dcc.Download(id="download-csv"),
+                        #dcc.Download(id="download-csv"),
                         html.A(
                                             "Submit new data", 
                                             href="/submit",
                                             className="doc-link-download",
-                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
+                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
                                         )
                 ]
     elif data['username'] == 'user':
-        return [html.Button(
-                             "Download data",
-                             className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '1', 'margin-right': '1vw'},
-                             id = "btn-download-data",
-                             n_clicks= 0
-                        ),
-            dcc.Download(id="download-csv"),
+        return [
+            #dcc.Download(id="download-csv"),
             html.A(
                     "Submit new data", 
                     href="/submit",
                     className="doc-link-download",
-                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '1vw'},
+                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
                 ),
                 ]
 
