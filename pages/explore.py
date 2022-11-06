@@ -225,8 +225,8 @@ def toggle_modal(n_clicks, is_open):
     Output("data-tab-buttons", "children"),
     Input("session-username", "data")
 )
-def generate_tab_buttons(data):
-    if data['is_authorized'] == True and data['username'] == 'admin':
+def generate_tab_buttons(session_user):
+    if session_user['is_authorized'] == True and session_user['username'] == 'admin':
         df = data.read_database()
         return  [
                         html.Button(
@@ -263,7 +263,7 @@ def generate_tab_buttons(data):
                                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
                                         )
                 ]
-    elif data['username'] == 'user':
+    elif session_user['username'] == 'user':
         return [
             #dcc.Download(id="download-csv"),
             html.A(
