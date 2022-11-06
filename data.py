@@ -36,9 +36,9 @@ def update_validated_data(bio_id):
         password=DATABASE_CREDENTIALS['DB_PASSWORD'])
     cur = conn.cursor()
     query = """UPDATE biosignature
-               SET status = %s
+               SET status = ' 🟢 validated'
                WHERE biosignature_id = %s"""
-    cur.execute(query, (' 🟢 validated', bio_id))
+    cur.execute(query, (bio_id,))
     conn.commit()
     cur.close()
     conn.close()
