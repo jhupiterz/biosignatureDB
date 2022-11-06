@@ -28,6 +28,21 @@ def read_database():
     df = pd.DataFrame(results, columns=column_names)
     return df
 
+def update_validated_data(bio_id):
+    conn = psycopg2.connect(
+        host=DATABASE_CREDENTIALS['HOST'],
+        database=DATABASE_CREDENTIALS['DATABASE'],
+        user=DATABASE_CREDENTIALS['USER'],
+        password=DATABASE_CREDENTIALS['DB_PASSWORD'])
+    cur = conn.cursor()
+    query = """UPDATE biosignature
+               SET status = ' 🟢 validated'
+               WHERE biosignature_id = (%s)"""
+    cur.execute(query, (bio_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+
 def read_json_data(json_file):
     with open(json_file, 'r') as myfile:
         data=myfile.read()

@@ -232,7 +232,7 @@ def generate_tab_buttons(session_user):
                         html.Button(
                              "Validate data",
                              className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1vw'},
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
                              id = "btn-validate-data",
                              n_clicks= 0
                         ),
@@ -308,16 +308,13 @@ def generate_modal_mody(data_to_validate):
 )
 def func(data_to_validate, selected_rows, n_clicks):
     if n_clicks > 0:
-        df = data.read_database()
-        df_to_validate = pd.DataFrame(data_to_validate)
-        df_selected = df_to_validate.iloc[selected_rows]
-        for index, row in df.iterrows():
-            for index_, row_ in df_selected.iterrows():
-                if row['biosignature_id'] == row_['biosignature_id']:
-                    df.loc[index, 'status'] = ' 🟢 validated'
-        #df.to_csv('../raw_data/biosignature.csv', index=False)
-        #df.to_json('data/biosignature.json', orient='records')
-        return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
+        if data_to_validate:
+            df_to_validate = pd.DataFrame(data_to_validate)
+            for row in selected_rows:
+                bio_id = df_to_validate.iloc[row]['biosignature_id']
+                data.update_validated_data(bio_id)
+            return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
+        return [" Choose which data entry to validate"]
 
 @callback(
     Output('edit-pop-up-content', 'is_open'),
