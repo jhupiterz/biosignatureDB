@@ -311,7 +311,8 @@ def func(data_to_validate, selected_rows, n_clicks):
         if data_to_validate:
             df_to_validate = pd.DataFrame(data_to_validate)
             for row in selected_rows:
-                bio_id = df_to_validate.iloc[row]['biosignature_id']
+                bio_id = df_to_validate.iloc[row]['biosignature_id'].item()
+                print(bio_id)
                 data.update_validated_data(bio_id)
             return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
         return [" Choose which data entry to validate"]
