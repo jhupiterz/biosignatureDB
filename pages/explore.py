@@ -189,9 +189,9 @@ def generate_mars_map(hoverData):
     df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if hoverData:
-        print(hoverData)
+        #print(hoverData)
         location = hoverData['points'][0]['hovertext']
-        print(df_[df_['location_name'] == location])
+        #print(df_[df_['location_name'] == location])
         mars_location = df_[df_['location_name'] == location]['mars_counterpart'].iloc[0]
         if mars_location == 'Columbia Hills, Mars':
             return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
