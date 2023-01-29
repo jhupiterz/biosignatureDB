@@ -1,7 +1,7 @@
 # 👾 Welcome astrobiologist!
 
 The Biosignature Database is an initiative to build a standardized, accessible, and consistent database among the astrobiology community.<br>
-The web app prototype has recently been deployed on Heroku an dcan be accessed [here](https://biosignature-database.herokuapp.com/).
+The web app prototype has recently been deployed on Heroku an can be accessed [here](https://biosignature-database.herokuapp.com/).
 
 ➡️ Data Source: manual entries from research papers<br>
 ➡️ Full documentation: [Here](https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436)<br>
