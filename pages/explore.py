@@ -232,7 +232,7 @@ def generate_tab_buttons(session_user):
                         html.Button(
                              "Validate data",
                              className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-8.5vh', 'z-index': '1000'},
                              id = "btn-validate-data",
                              n_clicks= 0
                         ),
@@ -257,20 +257,20 @@ def generate_tab_buttons(session_user):
                         ),
                         #dcc.Download(id="download-csv"),
                         html.A(
-                                            "Submit new data", 
+                                            "Submit data", 
                                             href="/submit",
                                             className="doc-link-download",
-                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
+                                            style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-8.5vh', 'z-index': '1000'},
                                         )
                 ]
     elif session_user['username'] == 'user':
         return [
             #dcc.Download(id="download-csv"),
             html.A(
-                    "Submit new data", 
+                    "Submit data", 
                     href="/submit",
                     className="doc-link-download",
-                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-9vh', 'z-index': '1000'},
+                    style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-8.5vh', 'z-index': '1000'},
                 ),
                 ]
 

@@ -62,19 +62,18 @@ app.layout = html.Div(
                 html.A(
                     [
                         html.Img(
-                            src="/assets/logo.png",
+                            src="/assets/home.png",
                             alt="biosignature database"
-                        ),
-                        html.H3("biosignature database")
+                        )
                     ],
                     href="/",
                     target="_self",
                     className="logo-banner",
                 ),
                 html.Div([
-                    html.A('Explore', href='/', className="menu-link",  style = {'order': '1', 'margin-right': '2vw'}),
+                    html.A('Explore', href='/explore', className="menu-link",  style = {'order': '1', 'margin-right': '2vw'}),
                     html.A('Submit new data', href='/submit', className="menu-link", style = {'order': '2', 'margin-right': '2vw'}),
-                    html.A('Documentation', href='https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436', target= "_blank", className="menu-link", style = {'order': '3', 'margin-right': '2vw'}),
+                    html.A('About', href='/about', className="menu-link", style = {'order': '3', 'margin-right': '2vw'}),
                     html.Div(id='login-dropdown', style={'order': '4'})
                 ], className = "menu"),
             ],
