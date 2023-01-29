@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 import plots
 import data
 
-dash.register_page(__name__, path='/')
+dash.register_page(__name__, path='/explore')
 
 def generate_data_preview(df):
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
