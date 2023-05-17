@@ -368,11 +368,13 @@ layout = html.Div(children=[
     html.Div([
         html.P(children=["👏 Thank you for willing to contribute to the biosignature database.",
                         "The purpose of this project is to have as much data as possible.",html.Br(),"However, data only makes sense if it is consistent and of good quality.",
-                        html.Br(), "⚠️ PLEASE, once again make sure to read the ",
-                        html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': 'blue', 'font-weight': 'bold'}),
-                        " before submitting any new data."], style = {'color': 'black', 'font-family': 'Arial, sans-serif', 'margin': 'auto', 'text-align': 'center', 'padding-top': '2vh'})],
+                        " PLEASE, once again make sure to read the ",
+                        html.A("contribution guidelines", href="https://alien-research.notion.site/Contribution-guidelines-5ee25bb809a24a81a3989c845c46f684", target="_blank", style = {'color': 'blue'}),
+                        " before submitting any new data. For information about the data validation process, please refer to the ",
+                        html.A("Notion page", href="https://alien-research.notion.site/App-technical-info-c7f6dc3d74294344b4101b8cafea195a", target="_blank", style = {'color': 'blue'}), "."],
+                        style = {'color': 'black', 'font-family': 'Arial, sans-serif', 'margin': 'auto', 'text-align': 'center', 'padding-top': '2vh'})],
             style = {'width': '75vw', 'height': '13vh', 'margin': 'auto', 'backgroundColor': '#e6e6e6', 'border-radius': '10px'}),
-    
+    html.Br(),
     dbc.Form([bio_id_input, bio_cat_input, bio_subcat_input,
               name_input, indicative_input, methods_input,
               sample_type_input, sample_subtype_input, min_age_input,
