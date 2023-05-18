@@ -4,7 +4,7 @@ The Biosignature Database is an initiative to build a standardized, accessible, 
 The web app prototype has recently been deployed on Heroku an can be accessed [here](https://biosignature-database.herokuapp.com/).
 
 ➡️ Data Source: manual entries from research papers<br>
-➡️ Full documentation: [Here](https://jhupiterz.notion.site/jhupiterz/The-Biosignature-Database-f48effd1004f4155acfd76deee382436)<br>
+➡️ Full documentation: [Here](https://alien-research.notion.site/The-Biosignature-Database-5165a9dff4e14b50ba1278c0f2012e3a)<br>
 ➡️ App link: [here](https://biosignature-database.herokuapp.com/)
 
 # 🖥️ App preview
