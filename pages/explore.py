@@ -62,7 +62,7 @@ def render_tab_content(tab_value):
                             html.Div([
                                 html.H3('(Paleo)environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '1vh', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                                 html.Div(id = 'paleoenv-filter', children = [create_dropdown(df)], style = {'order': '2', 'z-index': '10', 'position': 'absolute'})
-                            ], style = {'margin-top': '-1vh'}),
+                            ], style = {'margin-top': '1vh'}),
                             html.Div(id = 'interactive-map', children = [], className = 'interactive-map')],
                             style = {'order': '1', 'margin-left': '0vw', 'margin-top': '2vh'}),
                     
@@ -149,7 +149,7 @@ def create_interactive_map(projection, value_paleo):
     elif value_paleo != 'All':
         df_ = df_[df_['paleoenvironment'] == value_paleo]
         df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
-    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df_, projection), className = 'map-style', config= {'displayModeBar': False})
+    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df_, projection), className = 'map-style', config= {'displayModeBar': False}, responsive = True)
 
 @callback(
     Output('hover-bar-chart', 'children'),

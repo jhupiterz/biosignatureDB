@@ -318,6 +318,8 @@ h1 {
 
 .map-style {
   order: 1;
+  height: 55vh;
+  margin-top: 8vh;
 }
 
 .projection-selector {
