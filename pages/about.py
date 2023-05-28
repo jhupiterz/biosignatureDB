@@ -1,29 +1,7 @@
 import dash
 from dash import html, callback, Input, Output
-import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, path='/about')
-
-# layout = html.Div(children=[
-#         dbc.Card(
-#             [
-#                 dbc.CardHeader(
-#                     dbc.Tabs(
-#                         [
-#                             dbc.Tab(label="About the database", tab_id="database"),
-#                             dbc.Tab(label="Data standards", tab_id="standards"),
-#                             dbc.Tab(label="Contribution guidelines", tab_id="contribution"),
-#                             dbc.Tab(label="Contact", tab_id="contact"),
-#                         ],
-#                         style = {'margin-top': '0.5vh', 'margin-left': '0.1vw'},
-#                         id="about-tabs",
-#                         active_tab="database",
-#                     ), style= {'z-index': '1000'}
-#                 ),
-#                 dbc.CardBody(html.P(id="tab-content", className="card-text")),
-#             ], style = {'z-index': 0}),
-
-#     ], style={'z-index': '1'})
 
 layout = html.Div([
             html.H1('About the database', style = {'text-align': 'left', 'color': 'black'}),
@@ -46,8 +24,9 @@ layout = html.Div([
                                'My research focuses on biosignatures and how to differentiate them from abiosignatures (i.e. abiotic mimics of biosignatures). ',
                                'While working on my research, I noticed that there was no standard reporting strategy for biosignature data. ',
                                "Being a coding and data science enthusiast, I decided to take on the challenge of creating the world's first Biosignature Database.",], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw'}),
-            html.P(['To request more information, contribute to the data standards, request new features for the app, or to simply reach out please send an email to ', html.A(children = ['biosignature.database@gmail.com'], href="mailto:biosignature.database@gmail.com", style = {'color': 'blue'})], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw'})
-            ]
+            html.H1('Contact', style = {'text-align': 'left', 'color': 'black'}),
+            html.P(['To request more information, contribute to the data standards, request new features for the app, or to simply reach out please send an email to ', html.A(children = ['biosignature.database@gmail.com'], href="mailto:biosignature.database@gmail.com", style = {'color': 'blue'}), "."], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw'})
+            ], style = {'margin-top': '-10vh'}
         )
 
 @callback(Output('tab-content', 'children'),

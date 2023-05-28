@@ -137,7 +137,7 @@ div.dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .co
   justify-content: center;
   text-align: center;
   margin: auto;
-  margin-top: 10vh;
+  margin-bottom: 8vh;
   padding-left: 8vh;
 }
 
@@ -332,7 +332,7 @@ h1 {
 .interactive-map {
   order: 2;
   height: 60vh;
-  margin-bottom: 7vh;
+  width: 35vw;
 }
 
 .hover-charts {

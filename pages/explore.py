@@ -7,6 +7,9 @@ import data
 
 dash.register_page(__name__, path='/explore')
 
+df = data.read_json_data('data/biosignature.json')
+df = pd.DataFrame(df)
+
 def generate_data_preview(df):
     return df.to_dict('records'),[{'id': x, 'name': x, 'presentation': 'markdown'} if x == 'pub_url' else {'id': x, 'name': x} for x in df.columns], [dict(selector='td[data-dash-column="pub_url"] table', rule='color: blue;')]
 
@@ -19,7 +22,7 @@ def create_dropdown(df):
     options = df['paleoenvironment'].unique().tolist()
     options = ['All'] + options
     return dcc.Dropdown(id = 'paleoenv-value', options = options, value = 'All', clearable= False,
-                        placeholder = 'Paleoenvironment', style = {'color': 'black', 'width': '26vw'})
+                        placeholder = 'Paleoenvironment', style = {'color': 'black', 'width': '30vw'})
 
 layout = html.Div(children=[
         dbc.Card(
@@ -43,7 +46,7 @@ layout = html.Div(children=[
 @callback(Output('card-content', 'children'),
           Input('card-tabs', 'active_tab'))
 def render_tab_content(tab_value):
-    df = data.read_database()
+    #df = data.read_database()
     if tab_value == 'dashboard':
         return html.Div([
             html.Div([
@@ -53,8 +56,8 @@ def render_tab_content(tab_value):
                             html.Div([
                                 html.H3('Projection', style = {'order':'1', 'text-align': 'center', 'color': 'black', 'margin-bottom': '0px', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
                                 dcc.RadioItems(id = 'projection-selector',
-                                            options = ['mercator', 'orthographic', 'natural earth'],
-                                            value = 'mercator', inline= False, style = {'order': '2', 'color': 'black'})
+                                            options = ['mercator', 'orthographic'],
+                                            value = 'mercator', inline = True, style = {'order': '2', 'color': 'black', 'width': '30vw'})
                                 ], className = 'projection-selector')], className= 'div-projection'),
                             html.Div([
                                 html.H3('(Paleo)environment', style = {'order':'1', 'text-align': 'left', 'color': 'black', 'margin-bottom': '1vh', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'}),
@@ -110,7 +113,7 @@ def render_tab_content(tab_value):
                     html.Div([
                         html.P(id='datatable-message', style = {'order':'1', 'color':'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.3vw', 'margin-top': '1vh'}),
                             
-                        html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw'}),    
+                        html.Div(id='data-tab-buttons', style = {'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'flex-end', 'order': '2', 'width': '40vw', 'margin-top':'0.5vh'}),    
                             
                     ], style={'width': '95vw', 'margin': 'auto', 'margin-top': '1vh', 'display': 'flex', 'flex-direction': 'row', 'align-items': 'center', 'justify-content': 'space-between'}),
                     dash_table.DataTable(id = 'data-preview', data = generate_data_preview(df)[0], columns= generate_data_preview(df)[1], export_format = 'csv',
@@ -139,23 +142,23 @@ def render_tab_content(tab_value):
     Input('projection-selector', 'value'),
     Input('paleoenv-value', 'value'))
 def create_interactive_map(projection, value_paleo):
-    df = data.read_database()
+    #df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if value_paleo == 'All':
-        df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number_of_samples', 'max_age']]
+        df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
     elif value_paleo != 'All':
         df_ = df_[df_['paleoenvironment'] == value_paleo]
-        df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number_of_samples', 'max_age']]
-    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df, projection), className = 'map-style', config= {'displayModeBar': False})
+        df_ = df_.groupby(['latitude', 'longitude', 'location_name', 'max_age'], as_index=False).sum()[['latitude', 'longitude', 'location_name', 'number of samples', 'max_age']]
+    return dcc.Graph(id = 'map', figure=plots.plot_interactive_map(df_, projection), className = 'map-style', config= {'displayModeBar': False})
 
 @callback(
     Output('hover-bar-chart', 'children'),
     Input('map', 'hoverData')
 )
 def create_bar_chart(hoverData):
-    df = data.read_database()
+    #df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
-    grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat', 'biosignature_subcat']).sum()[['number_of_samples' ]]
+    grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'biosignature_cat', 'biosignature_subcat']).sum()[['number of samples' ]]
     grouped_df.reset_index(level=['biosignature_cat', 'biosignature_subcat'], inplace=True)
     if hoverData:
         loc = hoverData['points'][0]['hovertext']
@@ -171,9 +174,9 @@ def create_bar_chart(hoverData):
     Input('map', 'hoverData')
 )
 def create_pie_chart(hoverData):
-    df = data.read_database()
+    #df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
-    grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'detection_methods']).sum()[['number_of_samples' ]]
+    grouped_df = df_.groupby(['latitude', 'longitude', 'location_name', 'detection_methods']).sum()[['number of samples' ]]
     grouped_df.reset_index(level=['detection_methods'], inplace=True)
     if hoverData:
         loc = hoverData['points'][0]['hovertext']
@@ -186,13 +189,12 @@ def create_pie_chart(hoverData):
     Output('mars-map', 'children'),
     Input('map', 'hoverData'))
 def generate_mars_map(hoverData):
-    df = data.read_database()
+    #df = data.read_database()
     df_ = df[df['status'] == ' 🟢 validated']
     if hoverData:
-        #print(hoverData)
         location = hoverData['points'][0]['hovertext']
-        #print(df_[df_['location_name'] == location])
-        mars_location = df_[df_['location_name'] == location]['mars_counterpart'].iloc[0]
+        print(df_.columns)
+        mars_location = df_[df_['location_name'] == location]['mars_counterpart_1'][0]
         if mars_location == 'Columbia Hills, Mars':
             return html.Img(src='/assets/mars_map_columbia.png', style = {'width': '38vw', 'height': '60vh', 'margin-left': '-4.5vw', 'margin-top': '-18vh'})
         elif mars_location == 'Eberswalde delta, Mars':
@@ -225,14 +227,14 @@ def toggle_modal(n_clicks, is_open):
     Output("data-tab-buttons", "children"),
     Input("session-username", "data")
 )
-def generate_tab_buttons(session_user):
-    if session_user['is_authorized'] == True and session_user['username'] == 'admin':
-        df = data.read_database()
+def generate_tab_buttons(data):
+    if data['is_authorized'] == True and data['username'] == 'admin':
+        #df = data.read_database()
         return  [
                         html.Button(
                              "Validate data",
                              className="doc-link-download",
-                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-8.5vh', 'z-index': '1000'},
+                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'margin-right': '1.5vw', 'margin-bottom': '-8.5vh'},
                              id = "btn-validate-data",
                              n_clicks= 0
                         ),
@@ -255,7 +257,6 @@ def generate_tab_buttons(session_user):
                             style={'color': 'black', 'font-family': 'Arial, sans-serif', 'font-size': '1.5vw'},
                             is_open=False,
                         ),
-                        #dcc.Download(id="download-csv"),
                         html.A(
                                             "Submit data", 
                                             href="/submit",
@@ -263,9 +264,8 @@ def generate_tab_buttons(session_user):
                                             style = {'font-family': 'Arial, sans-serif', 'font-size': '1vw', 'order': '2', 'padding': '7px', 'margin-right': '12vw', 'margin-bottom': '-8.5vh', 'z-index': '1000'},
                                         )
                 ]
-    elif session_user['username'] == 'user':
+    elif data['username'] == 'user':
         return [
-            #dcc.Download(id="download-csv"),
             html.A(
                     "Submit data", 
                     href="/submit",
@@ -308,14 +308,16 @@ def generate_modal_mody(data_to_validate):
 )
 def func(data_to_validate, selected_rows, n_clicks):
     if n_clicks > 0:
-        if data_to_validate:
-            df_to_validate = pd.DataFrame(data_to_validate)
-            for row in selected_rows:
-                bio_id = df_to_validate.iloc[row]['biosignature_id'].item()
-                print(bio_id)
-                data.update_validated_data(bio_id)
-            return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
-        return [" Choose which data entry to validate"]
+        #df = data.read_database()
+        df_to_validate = pd.DataFrame(data_to_validate)
+        df_selected = df_to_validate.iloc[selected_rows]
+        for index, row in df.iterrows():
+            for index_, row_ in df_selected.iterrows():
+                if row['biosignature_id'] == row_['biosignature_id']:
+                    df.loc[index, 'status'] = ' 🟢 validated'
+        #df.to_csv('../raw_data/biosignature.csv', index=False)
+        #df.to_json('data/biosignature.json', orient='records')
+        return [" ✅ Your data has been successfully validated.",html.Br(),"Close the pop-up window and refresh the page to see the changes."]
 
 @callback(
     Output('edit-pop-up-content', 'is_open'),
