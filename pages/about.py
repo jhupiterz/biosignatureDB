@@ -18,15 +18,15 @@ layout = html.Div([
                              ]),
                              html.Br(),
                              html.P(['For contribution guidelines and feature requests, please check out the ', html.A(children = ['Notion page'], href="https://alien-research.notion.site/The-Biosignature-Database-5165a9dff4e14b50ba1278c0f2012e3a", style = {'color': 'blue'}), '.']),
-                             html.P(['For technical information about the Biosignature Database, please check out the ', html.A(children = ['white paper'], href="/assets/white_paper.pdf", style = {'color': 'blue'}), ' (work in progress, available soon).'])], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw'}),
+                             html.P(['For technical information about the Biosignature Database, please check out the ', html.A(children = ['white paper'], href="/assets/white_paper.pdf", style = {'color': 'blue'}), ' (work in progress, available soon).'])], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw', 'font-size': '2vh'}),
                              html.H1('How it started', style = {'text-align': 'left', 'color': 'black'}),
             html.P(children = ['Hi! My name is Julie and I currently am a PhD student in Astrobiology at McMaster University in Hamilton, Canada. ',
                                'My research focuses on biosignatures and how to differentiate them from abiosignatures (i.e. abiotic mimics of biosignatures). ',
                                'While working on my research, I noticed that there was no standard reporting strategy for biosignature data. ',
-                               "Being a coding and data science enthusiast, I decided to take on the challenge of creating the world's first Biosignature Database.",], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw'}),
+                               "Being a coding and data science enthusiast, I decided to take on the challenge of creating the world's first Biosignature Database.",], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw', 'font-size': '2vh'}),
             html.H1('Contact', style = {'text-align': 'left', 'color': 'black'}),
-            html.P(['To request more information, contribute to the data standards, request new features for the app, or to simply reach out please send an email to ', html.A(children = ['biosignature.database@gmail.com'], href="mailto:biosignature.database@gmail.com", style = {'color': 'blue'}), "."], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw'})
-            ], style = {'margin-top': '-10vh'}
+            html.P(['To request more information, contribute to the data standards, request new features for the app, or to simply reach out please send an email to ', html.A(children = ['biosignature.database@gmail.com'], href="mailto:biosignature.database@gmail.com", style = {'color': 'blue'}), "."], style = {'width': '85vw','text-align': 'left', 'color': 'black', 'margin-left': '2vw', 'font-size': '2vh'})
+            ], style = {'margin-top': '-7vh'}
         )
 
 @callback(Output('tab-content', 'children'),
