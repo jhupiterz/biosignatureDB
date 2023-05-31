@@ -281,7 +281,7 @@ def generate_tab_buttons(data):
 def generate_message(data):
     if (data['is_authorized'] == True and data['username'] == 'admin') or (data['username'] == 'user'):
         return ['👋 Make sure to read the ',
-                html.A("contribution guidelines", href="https://jhupiterz.notion.site/The-Biosignature-Database-f48effd1004f4155acfd76deee382436", target="_blank", style = {'color': '#a0a4e4', 'font-weight': 'bold'}),
+                html.A("contribution guidelines", href="https://alien-research.notion.site/The-Biosignature-Database-5165a9dff4e14b50ba1278c0f2012e3a", target="_blank", style = {'color': '#a0a4e4', 'font-weight': 'bold'}),
                 ' before submitting any new data']
     return ['👋 Log in for more features (top right corner)']
 
